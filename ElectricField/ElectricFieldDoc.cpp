@@ -142,8 +142,11 @@ bool CElectricFieldDoc::GetData()
 
 	GetDataFromThreads();
 
-	for (auto line : calculator->field.electricFieldLines) line.AdjustForBezier();
-	for (auto line : calculator->field.potentialFieldLines)	line.AdjustForBezier();
+	std::thread thread1 = std::thread([calc = calculator] {	for (auto line : calc->field.electricFieldLines) line.AdjustForBezier(); });
+	std::thread thread2 = std::thread([calc = calculator] {	for (auto line : calc->field.potentialFieldLines) line.AdjustForBezier(); });
+
+	thread1.join();
+	thread2.join();
 
 	return true;
 }
@@ -204,7 +207,7 @@ void CElectricFieldDoc::GetDataFromThreads()
 				if (calculator->field.potentialFieldLines.size())
 				{
 					// if their weight centers are more than 2*chargeRadius far apart, they are considered different field lines, not duplicate of the same one
-					if ((calculator->field.potentialFieldLines.back().weightCenter - equiline.weightCenter).Length() > 2. * theApp.options.chargeRadius / ((double)theApp.options.distanceUnitLength)
+					if ((calculator->field.potentialFieldLines.back().weightCenter - equiline.weightCenter).Length() * theApp.options.distanceUnitLength > 2. * theApp.options.chargeRadius
 						|| abs(potential - calculator->field.potentialFieldLines.back().potential) > calculator->getPotentialInterval() * 2. / 3.)
 						calculator->field.potentialFieldLines.push_back(equiline);
 				}

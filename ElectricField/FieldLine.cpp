@@ -132,14 +132,14 @@ void FieldLine::Draw(CDC* pDC, float zoom) const
 			continue;
 		}
 		
-		gdiPoints.push_back(CPoint((int)(zoom*point.X* theApp.options.distanceUnitLength), (int)(zoom*point.Y* theApp.options.distanceUnitLength)));
+		gdiPoints.push_back(CPoint((int)(zoom * point.X * theApp.options.distanceUnitLength), (int)(zoom * point.Y * theApp.options.distanceUnitLength)));
 		
 		if (gdiPoints.size() == 1) pDC->MoveTo(gdiPoints.back());
 		else if (gdiPoints.size() == 16)
 		{
 			pDC->PolyBezier(gdiPoints.data(), (int)gdiPoints.size());
 			gdiPoints.clear();
-			gdiPoints.push_back(CPoint((int)(zoom*point.X* theApp.options.distanceUnitLength), (int)(zoom*point.Y* theApp.options.distanceUnitLength)));
+			gdiPoints.push_back(CPoint((int)(zoom * point.X * theApp.options.distanceUnitLength), (int)(zoom * point.Y * theApp.options.distanceUnitLength)));
 		}
 	}
 

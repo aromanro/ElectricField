@@ -25,6 +25,14 @@ template<class T> inline void FieldLinesCalculator::CalcThread<T>::PostCalculate
 		FieldLineJob job(m_Job);
 		job.isEquipotential = true;
 		m_pCalculator->m_jobs.push_back(job);
+
+		// some threads finished although there are still jobs posted
+		// restart one
+		if (m_pCalculator->finishedThreads > 0)
+		{
+			--m_pCalculator->finishedThreads;
+			m_pCalculator->StartComputingThread(&m_pCalculator->field);
+		}
 	}
 }
 
@@ -41,7 +49,7 @@ template<class T> inline void FieldLinesCalculator::CalcThread<T>::CalculateElec
 
 	if (m_Job.has_different_signs && m_Job.total_charge == 0) steps = 5000000;
 	else if (m_Job.has_different_signs) steps = 1000000;
-	else steps = 50000;
+	else steps = 30000;
 
 	double t = 0;  // this is dummy
 	double step = 0.001;
@@ -52,17 +60,13 @@ template<class T> inline void FieldLinesCalculator::CalcThread<T>::CalculateElec
 	// on the other ones the lines will end (hopefully all of them if the total charge is zero)
 	if (sign(m_Job.total_charge) == sign(m_Job.charge.charge))
 		fieldLine.AddPoint(m_Job.point);
-
-
-	// the first line from a charge is a special case, it needs more precision because it's used to start equipotential lines
-	unsigned int num_steps = steps * ((calculateEquipotentials && m_Job.angle == m_Job.angle_start && !m_Job.has_different_signs) ? 10 : 1);
-	
-	for (unsigned int i = 0; i < num_steps; ++i)
+		
+	for (unsigned int i = 0; i < steps; ++i)
 	{
 		double len = m_Job.point.Length() * distanceUnitLength;
 
-		// precision is needed either for the first line (if equipotentials are calculated) or for parts of lines close to the charge
-		bool needs_precision = ((m_Job.angle == m_Job.angle_start && calculateEquipotentials) || len < 2000);
+		// precision is needed for parts of lines close to the charge
+		bool needs_precision = (len < 2000);
 
 		if (m_Solver->IsAdaptive())
 		{
@@ -234,6 +238,8 @@ void FieldLinesCalculator::StartCalculating(const TheElectricField *theField)
 		}
 	}
 
+	potentialInterval = theApp.options.potentialInterval;
+
 	startedThreads = theApp.options.numThreads;
 	for (unsigned int i = 0; i < startedThreads; ++i) StartComputingThread(theField);
 }
@@ -264,8 +270,6 @@ bool FieldLinesCalculator::CheckStatus()
 
 void FieldLinesCalculator::StartComputingThread(const TheElectricField *theField)
 {
-	potentialInterval = theApp.options.potentialInterval;
-
 	switch (theApp.options.calculationMethod)
 	{
 	case Options::CalculationMethod::EulerMethod:
