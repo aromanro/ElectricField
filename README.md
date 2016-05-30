@@ -10,6 +10,7 @@ The project compiles on Windows with Visual Studio 2015.
 LIBRARIES
 
 mfc: included with Visual Studio
+
 Direct2D: should already be there
 
 CLASSES
@@ -36,7 +37,7 @@ OptionsPropertySheet, ComputationPropertyPage, DrawPropertyPage - UI for the opt
 
 PrecisionTimer is a class that I used to measure some execution times. Not currently used in the program, it might be useful in some other projects, too.
 
-Vector2D<T> - It's very similar with the Vector3D<T> class from the SolarSystem project, in fact I took it from there and changed it to be 2D, eliminating some code in the process. Obviously implements a vector in 2D, the case of the current program.
+Vector2D<T> - It's very similar with the Vector3D<T> class from the SolarSystem project, in fact I took it from there and changed it to be 2D, eliminating some code in the process. Obviously implements a vector in 2D, the current program is dealing with 2D ones.
 
 ComputationThread - The base class for a field line computation thread. There is not much to it, Start() starts it.
 
