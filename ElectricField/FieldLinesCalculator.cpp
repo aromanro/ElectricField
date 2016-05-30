@@ -189,7 +189,7 @@ template<class T> void FieldLinesCalculator::CalcThread<T>::Calculate()
 
 
 FieldLinesCalculator::FieldLinesCalculator()
-	: startedThreads(0), finishedThreads(0), potentialInterval(0), Terminate(false)
+	: startedThreads(0), finishedThreads(0), potentialInterval(0), Terminate(false), calcMethod(Options::CalculationMethod::EulerMethod)
 {
 }
 
@@ -239,6 +239,7 @@ void FieldLinesCalculator::StartCalculating(const TheElectricField *theField)
 	}
 
 	potentialInterval = theApp.options.potentialInterval;
+	calcMethod = theApp.options.calculationMethod;
 
 	startedThreads = theApp.options.numThreads;
 	for (unsigned int i = 0; i < startedThreads; ++i) StartComputingThread(theField);
@@ -270,7 +271,7 @@ bool FieldLinesCalculator::CheckStatus()
 
 void FieldLinesCalculator::StartComputingThread(const TheElectricField *theField)
 {
-	switch (theApp.options.calculationMethod)
+	switch (calcMethod)
 	{
 	case Options::CalculationMethod::EulerMethod:
 		new CalcThread<decltype(m_Euler)>(this, theField, &m_Euler);

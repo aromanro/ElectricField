@@ -8,6 +8,7 @@
 #include "TheElectricField.h"
 #include "RungeKutta.h"
 #include "ComputationThread.h"
+#include "Options.h"
 
 class FieldLinesCalculator
 {
@@ -25,6 +26,9 @@ protected:
 	RungeKutta::AdaptiveCashKarp<Vector2D<double>> m_AdaptiveCashKarp;
 	RungeKutta::AdaptiveFehlberg<Vector2D<double>> m_AdaptiveFehlberg;
 	RungeKutta::AdaptiveDormandPrince<Vector2D<double>> m_AdaptiveDormandPrince;
+
+
+	Options::CalculationMethod calcMethod;
 
 	// some info needed for a field line job
 	typedef struct FieldLineJob {
