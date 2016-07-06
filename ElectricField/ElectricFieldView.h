@@ -44,7 +44,7 @@ protected:
 
 	DECLARE_MESSAGE_MAP()
 public:
-	afx_msg LRESULT CElectricFieldView::OnDrawWithD2D(WPARAM wParam, LPARAM lParam);
+	afx_msg LRESULT OnDrawWithD2D(WPARAM wParam, LPARAM lParam);
 	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
 	virtual void OnPrint(CDC* pDC, CPrintInfo* pInfo);
 	virtual void OnPrepareDC(CDC* pDC, CPrintInfo* pInfo = NULL);
