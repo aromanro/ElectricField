@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <array>
 
 #define sign(x) ((x) >= 0 ? 1 : -1)
 
@@ -12,20 +13,19 @@ namespace RungeKutta {
 		std::vector<double> m_weights;
 		std::vector<double> m_nodes;
 		std::vector<std::vector<double>> m_coefficients;
+
+		std::array<T, Stages> K;
 	public:
 		RungeKutta(const double weights[], const double nodes[], const double *coefficients[]);
 
-		template<typename Func> inline T SolveStep(Func& Function, const T& curVal, double t, double h) const {
-				std::vector<T> K;      
-				K.reserve(Stages);   
-				
+		template<typename Func> inline T SolveStep(Func& Function, const T& curVal, double t, double h) {
 				T thesum(0);              				
 				for (unsigned int stage = 0; stage < Stages; ++stage)
 				{                                                
 					T accum(0);                                     
 					for (unsigned int j = 0; j < stage; ++j) accum += m_coefficients[stage - 1][j] * K[j];  
 
-					K.push_back(Function(t + h * m_nodes[stage], curVal + h * accum));
+					K[stage] = Function(t + m_nodes[stage] * h, curVal + h * accum);
 					
 					thesum += m_weights[stage] * K[stage];
 				} 
@@ -33,7 +33,7 @@ namespace RungeKutta {
 				return curVal + h * thesum;
 			}
 
-		template<typename Func> inline T SolveStep(Func& Function, const T& curVal, double t, double& h, double& /*next_h*/, double /*tolerance*/, double /*max_step*/ = DBL_MAX, double /*min_step*/ = DBL_MIN) const {
+		template<typename Func> inline T SolveStep(Func& Function, const T& curVal, double t, double& h, double& /*next_h*/, double /*tolerance*/, double /*max_step*/ = DBL_MAX, double /*min_step*/ = DBL_MIN) {
 			//next_h = h;
 			return SolveStep(Function, curVal, t, h);
 		}
@@ -49,10 +49,7 @@ namespace RungeKutta {
 	public:
 		AdaptiveRungeKutta(const double weights[], const double low_order_weights[], const double nodes[], const double *coefficients[]);
 	
-		template<typename Func> inline T SolveStep(Func& Function, const T& curVal, double t, double& h, double& next_h, double tolerance, double max_step = DBL_MAX, double min_step = DBL_MIN) const {
-			std::vector<T> K;
-			K.reserve(Stages);
-
+		template<typename Func> inline T SolveStep(Func& Function, const T& curVal, double t, double& h, double& next_h, double tolerance, double max_step = DBL_MAX, double min_step = DBL_MIN) {
 			for (unsigned int loop = 0;; ++loop) {
 
 				T thesumHigh(0), thesumLow(0);  
@@ -62,7 +59,7 @@ namespace RungeKutta {
 					T accum(0);                                     					
 					for (unsigned int j = 0; j < stage; ++j) accum += m_coefficients[stage - 1][j] * K[j];
 					
-					K.push_back(Function(t + m_nodes[stage] * h, curVal + h * accum));
+					K[stage] = Function(t + h * m_nodes[stage], curVal + h * accum);
 
 					thesumHigh += m_weights[stage] * K[stage];   
 					thesumLow  += m_low_order_weights[stage] * K[stage];  

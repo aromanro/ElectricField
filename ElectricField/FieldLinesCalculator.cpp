@@ -6,7 +6,21 @@
 
 const double M_PI = 3.1415926535897932384626433832795028841971693993751;
 
+template<class T> FieldLinesCalculator::CalcThread<T>::CalcThread(FieldLinesCalculator* calculator, const TheElectricField *field, T *solver)
+	: m_pCalculator(calculator), m_Solver(solver),
+	calculateEquipotentials(theApp.options.calculateEquipotentials), potentialInterval(theApp.options.potentialInterval), distanceUnitLength(theApp.options.distanceUnitLength)
+{
+	functorE.theField = field;
+	functorV.theField = field;
 
+	Start();
+}
+
+
+template<class T> FieldLinesCalculator::CalcThread<T>::~CalcThread()
+{
+	delete m_Solver;
+}
 
 template<class T> inline void FieldLinesCalculator::CalcThread<T>::PostCalculateEquipotential()
 {
@@ -274,37 +288,37 @@ void FieldLinesCalculator::StartComputingThread(const TheElectricField *theField
 	switch (calcMethod)
 	{
 	case Options::CalculationMethod::EulerMethod:
-		new CalcThread<decltype(m_Euler)>(this, theField, &m_Euler);
+		new CalcThread<RungeKutta::Euler<Vector2D<double>>>(this, theField, new RungeKutta::Euler<Vector2D<double>>());
 		break;
 	case Options::CalculationMethod::MidpointMethod:
-		new CalcThread<decltype(m_Midpoint)>(this, theField, &m_Midpoint);
+		new CalcThread<RungeKutta::Midpoint<Vector2D<double>>>(this, theField, new RungeKutta::Midpoint<Vector2D<double>>());
 		break;
 	case Options::CalculationMethod::RalstonMethod:
-		new CalcThread<decltype(m_Ralston)>(this, theField, &m_Ralston);
+		new CalcThread<RungeKutta::Ralston<Vector2D<double>>>(this, theField, new RungeKutta::Ralston<Vector2D<double>>());
 		break;
 	case Options::CalculationMethod::HeunMethod:
-		new CalcThread<decltype(m_Heun)>(this, theField, &m_Heun);
+		new CalcThread<RungeKutta::Heun<Vector2D<double>>>(this, theField, new RungeKutta::Heun<Vector2D<double>>());
 		break;
 	case Options::CalculationMethod::RK4Method:
-		new CalcThread<decltype(m_RK4)>(this, theField, &m_RK4);
+		new CalcThread<RungeKutta::RK4<Vector2D<double>>>(this, theField, new RungeKutta::RK4<Vector2D<double>>());
 		break;
 	case Options::CalculationMethod::RK3per8Method:
-		new CalcThread<decltype(m_RK3per8)>(this, theField, &m_RK3per8);
+		new CalcThread<RungeKutta::RK3per8<Vector2D<double>>>(this, theField, new RungeKutta::RK3per8<Vector2D<double>>());
 		break;
 	case Options::CalculationMethod::AdaptiveHeunEulerMethod:
-		new CalcThread<decltype(m_AdaptiveHeunEuler)>(this, theField, &m_AdaptiveHeunEuler);
+		new CalcThread<RungeKutta::AdaptiveHeunEuler<Vector2D<double>>>(this, theField, new RungeKutta::AdaptiveHeunEuler<Vector2D<double>>());
 		break;
 	case Options::CalculationMethod::AdaptiveBogackiShampineMethod:
-		new CalcThread<decltype(m_AdaptiveBogackiShampine)>(this, theField, &m_AdaptiveBogackiShampine);
+		new CalcThread<RungeKutta::AdaptiveBogackiShampine<Vector2D<double>>>(this, theField, new RungeKutta::AdaptiveBogackiShampine<Vector2D<double>>());
 		break;
 	case Options::CalculationMethod::AdaptiveCashKarpMethod:
-		new CalcThread<decltype(m_AdaptiveCashKarp)>(this, theField, &m_AdaptiveCashKarp);
+		new CalcThread<RungeKutta::AdaptiveCashKarp<Vector2D<double>>>(this, theField, new RungeKutta::AdaptiveCashKarp<Vector2D<double>>());
 		break;
 	case Options::CalculationMethod::AdaptiveFehlbergMethod:
-		new CalcThread<decltype(m_AdaptiveFehlberg)>(this, theField, &m_AdaptiveFehlberg);
+		new CalcThread<RungeKutta::AdaptiveFehlberg<Vector2D<double>>>(this, theField, new RungeKutta::AdaptiveFehlberg<Vector2D<double>>());
 		break;
 	case Options::CalculationMethod::AdaptiveDormandPrinceMethod:
-		new CalcThread<decltype(m_AdaptiveDormandPrince)>(this, theField, &m_AdaptiveDormandPrince);
+		new CalcThread<RungeKutta::AdaptiveDormandPrince<Vector2D<double>>>(this, theField, new RungeKutta::AdaptiveDormandPrince<Vector2D<double>>());
 		break;
 	}
 }

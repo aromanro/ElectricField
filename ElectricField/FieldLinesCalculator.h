@@ -13,21 +13,6 @@
 class FieldLinesCalculator
 {
 protected:
-
-	RungeKutta::Euler<Vector2D<double>> m_Euler;
-	RungeKutta::Midpoint<Vector2D<double>> m_Midpoint;
-	RungeKutta::Ralston<Vector2D<double>> m_Ralston;
-	RungeKutta::Heun<Vector2D<double>> m_Heun;
-	RungeKutta::RK4<Vector2D<double>> m_RK4;
-	RungeKutta::RK3per8<Vector2D<double>> m_RK3per8;
-
-	RungeKutta::AdaptiveHeunEuler<Vector2D<double>> m_AdaptiveHeunEuler;
-	RungeKutta::AdaptiveBogackiShampine<Vector2D<double>> m_AdaptiveBogackiShampine;
-	RungeKutta::AdaptiveCashKarp<Vector2D<double>> m_AdaptiveCashKarp;
-	RungeKutta::AdaptiveFehlberg<Vector2D<double>> m_AdaptiveFehlberg;
-	RungeKutta::AdaptiveDormandPrince<Vector2D<double>> m_AdaptiveDormandPrince;
-
-
 	Options::CalculationMethod calcMethod;
 
 	// some info needed for a field line job
@@ -51,7 +36,7 @@ protected:
 	template<class T> class CalcThread : public ComputationThread {
 	protected:
 		FieldLinesCalculator* m_pCalculator;
-		const T* m_Solver;
+		T* m_Solver;
 
 		class FunctorForCalc {
 		public:
@@ -111,15 +96,8 @@ protected:
 		virtual void Calculate();
 
 	public:
-		CalcThread(FieldLinesCalculator* calculator, const TheElectricField *field, const T *solver) 
-			: m_pCalculator(calculator), m_Solver(solver), 
-			calculateEquipotentials(theApp.options.calculateEquipotentials), potentialInterval(theApp.options.potentialInterval), distanceUnitLength(theApp.options.distanceUnitLength)
-		{
-			functorE.theField = field;
-			functorV.theField = field;
-
-			Start();
-		}
+		CalcThread(FieldLinesCalculator* calculator, const TheElectricField *field, T *solver);
+		~CalcThread();
 	};
 
 	unsigned int startedThreads;

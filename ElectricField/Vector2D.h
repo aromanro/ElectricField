@@ -37,7 +37,7 @@ public:
 	Vector2D UnitVector() const;
 };
 
-template<typename T> Vector2D<T> operator*(T o, Vector2D<T>& t) { return t*o; }
+template<typename T> Vector2D<T> operator*(T o, const Vector2D<T>& t) { return t*o; }
 
 template<typename T> bool operator==(const Vector2D<T>& f, const Vector2D<T>& t) { return f.X==t.X && f.Y==t.Y; }
 
