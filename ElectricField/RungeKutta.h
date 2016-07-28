@@ -10,8 +10,8 @@ namespace RungeKutta {
 	template<typename T, unsigned int Stages> class RungeKutta
 	{
 	protected:
-		std::vector<double> m_weights;
-		std::vector<double> m_nodes;
+		std::array<double, Stages> m_weights;
+		std::array<double, Stages> m_nodes;
 		std::vector<std::vector<double>> m_coefficients;
 
 		std::array<T, Stages> K;
@@ -45,7 +45,7 @@ namespace RungeKutta {
 
 	template<typename T, unsigned int Stages, unsigned int Order> class AdaptiveRungeKutta : public RungeKutta<T, Stages> {
 	protected:
-		std::vector<double> m_low_order_weights;
+		std::array<double, Stages> m_low_order_weights;
 	public:
 		AdaptiveRungeKutta(const double weights[], const double low_order_weights[], const double nodes[], const double *coefficients[]);
 	
