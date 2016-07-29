@@ -34,7 +34,6 @@ public:
 
 	T Length() const;
 	Vector2D Normalize() const;
-	Vector2D UnitVector() const;
 };
 
 template<typename T> Vector2D<T> operator*(T o, const Vector2D<T>& t) { return t*o; }

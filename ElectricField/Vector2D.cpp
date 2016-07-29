@@ -119,12 +119,3 @@ template<typename T> Vector2D<T> Vector2D<T>::Normalize() const
 	return *this;
 }
 
-template<typename T> Vector2D<T> Vector2D<T>::UnitVector() const
-{
-	T len = Length();
-
-	if (len != 0)
-		return Vector2D<T>(X / len, Y / len);
-
-	return Vector2D<T>(X, Y);
-}
