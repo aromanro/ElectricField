@@ -19,15 +19,15 @@ TheElectricField::~TheElectricField()
 void TheElectricField::Draw(CHwndRenderTarget* renderTarget, CRect& rect)
 {	
 	// draw electric field lines
-	for (auto &&line : electricFieldLines)
+	for (const auto &line : electricFieldLines)
 		line.Draw(renderTarget, rect);
 
 	// draw potential lines
-	for (auto &&line : potentialFieldLines)
+	for (const auto &line : potentialFieldLines)
 		line.Draw(renderTarget, rect, true);
 
 	// draw charges
-	for (auto &&charge : charges)
+	for (const auto &charge : charges)
 		charge.Draw(renderTarget, rect);
 }
 
@@ -38,7 +38,7 @@ void TheElectricField::Draw(CDC* pDC, float zoom)
 	CPen *oldpen = pDC->SelectObject(&pen);
 
 	// draw electric field lines
-	for (auto &&line : electricFieldLines)
+	for (const auto &line : electricFieldLines)
 		line.Draw(pDC, zoom);
 
 	CPen newpen;
@@ -46,13 +46,13 @@ void TheElectricField::Draw(CDC* pDC, float zoom)
 	pDC->SelectObject(&newpen);
 
 	// draw potential lines
-	for (auto &&line : potentialFieldLines)
+	for (const auto &line : potentialFieldLines)
 		line.Draw(pDC, zoom);
 
 	pDC->SelectObject(oldpen);
 
 	// draw charges
-	for (auto &&charge : charges)
+	for (const auto &charge : charges)
 		charge.Draw(pDC, zoom);
 }
 

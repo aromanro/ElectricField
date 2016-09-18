@@ -232,7 +232,7 @@ void FieldLinesCalculator::StartCalculating(const TheElectricField *theField)
 	Vector2D<double> point;
 
 	double angle_start = 0;
-	for (auto &&charge : theField->charges) {
+	for (const auto &charge : theField->charges) {
 		if (charge.charge == 0) continue;
 
 		double angle_step = 2.*M_PI / (fabs(charge.charge)*theApp.options.numLinesOnUnitCharge);
@@ -263,7 +263,7 @@ int FieldLinesCalculator::GetNumberOfElectricFieldLines(const TheElectricField* 
 {
 	int result = 0;
 
-	for (auto &&charge : field->charges) {
+	for (const auto &charge : field->charges) {
 		if (charge.charge == 0) continue;
 
 		if (sign(total_charge) == sign(charge.charge))

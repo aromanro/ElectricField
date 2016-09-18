@@ -181,10 +181,10 @@ void CElectricFieldDoc::GetDataFromThreads()
 	double potential = 0;
 	std::vector<PotentialLine> equipotentials;
 
-	// pick a point with no symmetric arangement of charges around it
+	// pick a point with no symmetric arrangement of charges around it
 	Vector2D<double> ref(-7., 5.5);
 
-	for (auto &&line : calculator->potentialFieldLines)
+	for (const auto &line : calculator->potentialFieldLines)
 	{
 		// all lines that are in an interval smaller than a third of the potential interval
 		// are considered to be at the same potential
@@ -202,7 +202,7 @@ void CElectricFieldDoc::GetDataFromThreads()
 			}
 			);
 
-			for (auto &&equiline : equipotentials)
+			for (const auto &equiline : equipotentials)
 			{
 				if (calculator->field.potentialFieldLines.size())
 				{

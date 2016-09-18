@@ -23,7 +23,7 @@ public:
 	
 	inline bool HitCharge(const Vector2D<double>& pos) const
 	{
-		for (auto &&charge : charges)
+		for (const auto &charge : charges)
 			if (charge.HitCharge(pos))	return true;
 
 		return false;
@@ -34,7 +34,7 @@ public:
 	{
 		double P = 0;
 
-		for (auto &&charge : charges)
+		for (const auto &charge : charges)
 			P += charge.Potential(pos);
 
 		return P;
@@ -45,7 +45,7 @@ public:
 	{
 		Vector2D<double> result;
 
-		for (auto &&charge : charges)
+		for (const auto &charge : charges)
 			result += charge.E(pos);
 
 		return result;
