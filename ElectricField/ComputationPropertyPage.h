@@ -5,7 +5,7 @@
 
 // CComputationPropertyPage dialog
 
-class ComputationPropertyPage : public CPropertyPage
+class ComputationPropertyPage : public CMFCPropertyPage
 {
 	DECLARE_DYNAMIC(ComputationPropertyPage)
 

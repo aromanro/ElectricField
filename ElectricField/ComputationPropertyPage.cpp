@@ -9,10 +9,10 @@
 
 // CComputationPropertyPage dialog
 
-IMPLEMENT_DYNAMIC(ComputationPropertyPage, CPropertyPage)
+IMPLEMENT_DYNAMIC(ComputationPropertyPage, CMFCPropertyPage)
 
 ComputationPropertyPage::ComputationPropertyPage()
-	: CPropertyPage(IDD_COMPUTATIONPROPERTYPAGE)	
+	: CMFCPropertyPage(IDD_COMPUTATIONPROPERTYPAGE)	
 {
 	m_Method = theApp.options.calculationMethod;
 	m_CalculateEquipotentials = (theApp.options.calculateEquipotentials ? BST_CHECKED : BST_UNCHECKED);
@@ -26,7 +26,7 @@ ComputationPropertyPage::~ComputationPropertyPage()
 
 void ComputationPropertyPage::DoDataExchange(CDataExchange* pDX)
 {
-	CPropertyPage::DoDataExchange(pDX);
+	CMFCPropertyPage::DoDataExchange(pDX);
 
 	DDX_Check(pDX, IDC_CHECK1, m_CalculateEquipotentials);
 	DDX_Radio(pDX, IDC_RADIO1, m_Method);
@@ -44,7 +44,7 @@ void ComputationPropertyPage::DoDataExchange(CDataExchange* pDX)
 }
 
 
-BEGIN_MESSAGE_MAP(ComputationPropertyPage, CPropertyPage)
+BEGIN_MESSAGE_MAP(ComputationPropertyPage, CMFCPropertyPage)
 	ON_BN_CLICKED(IDC_CHECK1, &ComputationPropertyPage::OnBnClickedCheck)
 	ON_EN_CHANGE(IDC_EDIT1, &ComputationPropertyPage::OnEnChangeEdit)
 	ON_EN_CHANGE(IDC_EDIT2, &ComputationPropertyPage::OnEnChangeEdit)
@@ -87,7 +87,7 @@ BOOL ComputationPropertyPage::OnApply()
 
 	ApplyValues();
 
-	return CPropertyPage::OnApply();
+	return CMFCPropertyPage::OnApply();
 }
 
 
@@ -116,7 +116,7 @@ void ComputationPropertyPage::OnBnClickedRadio()
 
 BOOL ComputationPropertyPage::OnInitDialog()
 {
-	CPropertyPage::OnInitDialog();
+	CMFCPropertyPage::OnInitDialog();
 
 	// TODO:  Add extra initialization here
 	m_Spin1.SetRange(4, 128);

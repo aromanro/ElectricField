@@ -11,10 +11,10 @@
 
 // CDrawPropertyPage dialog
 
-IMPLEMENT_DYNAMIC(DrawPropertyPage, CPropertyPage)
+IMPLEMENT_DYNAMIC(DrawPropertyPage, CMFCPropertyPage)
 
 DrawPropertyPage::DrawPropertyPage()
-	: CPropertyPage(IDD_DRAWPROPERTYPAGE)
+	: CMFCPropertyPage(IDD_DRAWPROPERTYPAGE)
 {
 	electricFieldLineThickness = theApp.options.electricFieldLineThickness;
 	potentialFieldLineThickness = theApp.options.potentialFieldLineThickness;
@@ -26,7 +26,7 @@ DrawPropertyPage::~DrawPropertyPage()
 
 void DrawPropertyPage::DoDataExchange(CDataExchange* pDX)
 {
-	CPropertyPage::DoDataExchange(pDX);
+	CMFCPropertyPage::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_EDIT1, m_Edit1);
 	DDX_Control(pDX, IDC_EDIT2, m_Edit2);
 	DDX_Control(pDX, IDC_SPIN1, m_Spin1);
@@ -43,7 +43,7 @@ void DrawPropertyPage::DoDataExchange(CDataExchange* pDX)
 }
 
 
-BEGIN_MESSAGE_MAP(DrawPropertyPage, CPropertyPage)
+BEGIN_MESSAGE_MAP(DrawPropertyPage, CMFCPropertyPage)
 	ON_EN_CHANGE(IDC_EDIT1, &DrawPropertyPage::OnEnChangeEdit)
 	ON_EN_CHANGE(IDC_EDIT2, &DrawPropertyPage::OnEnChangeEdit)
 	ON_NOTIFY(UDN_DELTAPOS, IDC_SPIN1, &DrawPropertyPage::OnDeltaposSpin)
@@ -94,13 +94,13 @@ BOOL DrawPropertyPage::OnApply()
 
 	ApplyValues();
 
-	return CPropertyPage::OnApply();
+	return CMFCPropertyPage::OnApply();
 }
 
 
 BOOL DrawPropertyPage::OnInitDialog()
 {
-	CPropertyPage::OnInitDialog();
+	CMFCPropertyPage::OnInitDialog();
 
 	m_Spin1.SetRange(1, 64);
 	m_Spin2.SetRange(1, 64);

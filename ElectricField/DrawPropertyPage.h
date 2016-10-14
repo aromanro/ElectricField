@@ -6,7 +6,7 @@
 
 // CDrawPropertyPage dialog
 
-class DrawPropertyPage : public CPropertyPage
+class DrawPropertyPage : public CMFCPropertyPage
 {
 	DECLARE_DYNAMIC(DrawPropertyPage)
 
