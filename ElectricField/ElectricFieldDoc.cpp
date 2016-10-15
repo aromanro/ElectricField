@@ -170,7 +170,7 @@ void CElectricFieldDoc::GetDataFromThreads()
 
 	// sort lines by potential
 	std::sort(calculator->potentialFieldLines.begin(), calculator->potentialFieldLines.end(),
-		[](auto &&a, auto &&b) -> bool {
+		[](const auto &a, const auto &b) -> bool {
 		return a.potential < b.potential;
 	}
 	);
@@ -197,7 +197,7 @@ void CElectricFieldDoc::GetDataFromThreads()
 		{
 			// now that all lines at a certain potential are in 'equipotentials', sort them by the distance to the reference point
 			std::sort(equipotentials.begin(), equipotentials.end(),
-				[&ref](auto &&a, auto &&b) -> bool {
+				[&ref](const auto &a, const auto &b) -> bool {
 				return (ref - a.weightCenter).Length() < (ref - b.weightCenter).Length();
 			}
 			);
