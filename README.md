@@ -1,7 +1,11 @@
 # ElectricField
 Electric field lines and equipotentials using Runge-Kutta methods, including adaptive ones
 
-A detailed description of the project should be found on the computational physics blog: http://compphys.go.ro/electric-field-lines/
+A detailed description of the project is on the computational physics blog: http://compphys.go.ro/electric-field-lines/
+
+### PROGRAM IN ACTION
+
+[![Program video](https://img.youtube.com/vi/3JGs0VSAtqk/0.jpg)](https://youtu.be/3JGs0VSAtqk)
 
 ### TOOLS
 
