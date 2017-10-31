@@ -8,9 +8,8 @@
 namespace RungeKutta {
 
 	template<typename T, unsigned int Stages> RungeKutta<T, Stages>::RungeKutta(const double weights[], const double nodes[], const double *coefficients[])
+		: m_coefficients(Stages - 1)
 	{
-		m_coefficients.reserve(Stages - 1);
-
 		for (unsigned int stage = 0; stage < Stages; ++stage)
 		{
 			m_weights[stage] = weights[stage];
@@ -18,15 +17,11 @@ namespace RungeKutta {
 
 			if (stage > 0)
 			{
-				m_coefficients.push_back(std::vector<double>());
-				
-				unsigned int coef_i = stage - 1;
-				m_coefficients[coef_i].reserve(stage);
+				const unsigned int coef_i = stage - 1;
+				m_coefficients[coef_i].resize(stage);
 
 				for (unsigned int j = 0; j < stage; ++j)
-				{
-					m_coefficients[coef_i].push_back(coefficients[coef_i][j]);
-				}
+					m_coefficients[coef_i][j] = coefficients[coef_i][j];
 			}
 		}
 	}
@@ -35,9 +30,7 @@ namespace RungeKutta {
 		: RungeKutta<T, Stages>(weights, nodes, coefficients)
 	{
 		for (unsigned int stage = 0; stage < Stages; ++stage)
-		{
 			m_low_order_weights[stage] = low_order_weights[stage];
-		}
 	}
 
 

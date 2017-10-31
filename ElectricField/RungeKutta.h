@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <valarray>
 #include <array>
 
 #define sign(x) ((x) >= 0 ? 1 : -1)
@@ -12,7 +13,7 @@ namespace RungeKutta {
 	protected:
 		std::array<double, Stages> m_weights;
 		std::array<double, Stages> m_nodes;
-		std::vector<std::vector<double>> m_coefficients;
+		std::vector<std::valarray<double>> m_coefficients;
 
 		std::array<T, Stages> K;
 	public:
