@@ -34,7 +34,7 @@ void TheElectricField::Draw(CHwndRenderTarget* renderTarget, CRect& rect)
 void TheElectricField::Draw(CDC* pDC, float zoom)
 {
 	CPen pen;
-	pen.CreatePen(PS_SOLID, (int)theApp.options.electricFieldLineThickness, theApp.options.electricFieldLineColor);
+	pen.CreatePen(PS_SOLID, static_cast<int>(theApp.options.electricFieldLineThickness), theApp.options.electricFieldLineColor);
 	CPen *oldpen = pDC->SelectObject(&pen);
 
 	// draw electric field lines
@@ -42,7 +42,7 @@ void TheElectricField::Draw(CDC* pDC, float zoom)
 		line.Draw(pDC, zoom);
 
 	CPen newpen;
-	newpen.CreatePen(PS_SOLID, (int)theApp.options.potentialFieldLineThickness, theApp.options.potentialFieldLineColor);
+	newpen.CreatePen(PS_SOLID, static_cast<int>(theApp.options.potentialFieldLineThickness), theApp.options.potentialFieldLineColor);
 	pDC->SelectObject(&newpen);
 
 	// draw potential lines
@@ -64,12 +64,11 @@ void TheElectricField::Clear()
 
 int TheElectricField::GetTotalCharge(bool& hasDifferentSigns) const
 {
-	int s;
+	int s = 1;
 	int total_charge = 0;
 
 	auto it = charges.begin();
-	if (it->charge > 0) s = 1;
-	else s = -1;
+	if (it->charge < 0) s = -1;
 
 	hasDifferentSigns = false;
 	for (; it != charges.end(); ++it) {

@@ -66,7 +66,7 @@ namespace RungeKutta {
 					thesumLow  += m_low_order_weights[stage] * K[stage];  
 				}
 
-				double error = abs((thesumHigh - thesumLow) * h);
+				const double error = abs((thesumHigh - thesumLow) * h);
 
 				if (error <= tolerance || loop > 1000 || abs(h) <= min_step) {
 					T result = curVal + h * thesumHigh;

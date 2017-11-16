@@ -26,9 +26,9 @@ template<class T> inline void FieldLinesCalculator::CalcThread<T>::PostCalculate
 {
 	if (m_Job.angle != m_Job.angle_start || !calculateEquipotentials) return;
 
-	Vector2D<double> startPoint = m_Job.point;
+	const Vector2D<double> startPoint = m_Job.point;
 
-	double potential = functorV.theField->Potential(startPoint);
+	const double potential = functorV.theField->Potential(startPoint);
 
 	if (sign(m_Job.charge.charge)*sign(potential) > 0 && abs(m_Job.old_potential - potential) >= potentialInterval)
 	{
@@ -52,7 +52,7 @@ template<class T> inline void FieldLinesCalculator::CalcThread<T>::PostCalculate
 
 template<class T> inline void FieldLinesCalculator::CalcThread<T>::CalculateElectricFieldLine()
 {
-	unsigned int steps;
+	unsigned int steps = 30000;
 	
 	//dummy values
 	double precision = 0.01;
@@ -63,7 +63,6 @@ template<class T> inline void FieldLinesCalculator::CalcThread<T>::CalculateElec
 
 	if (m_Job.has_different_signs && m_Job.total_charge == 0) steps = 5000000;
 	else if (m_Job.has_different_signs) steps = 1000000;
-	else steps = 30000;
 
 	double t = 0;  // this is dummy
 	double step = 0.001;
@@ -77,10 +76,10 @@ template<class T> inline void FieldLinesCalculator::CalcThread<T>::CalculateElec
 		
 	for (unsigned int i = 0; i < steps; ++i)
 	{
-		double len = m_Job.point.Length() * distanceUnitLength;
+		const double len = m_Job.point.Length() * distanceUnitLength;
 
 		// precision is needed for parts of lines close to the charge
-		bool needs_precision = (len < 2000);
+		const bool needs_precision = (len < 2000);
 
 		if (m_Solver->IsAdaptive())
 		{
@@ -120,7 +119,7 @@ template<class T> inline void FieldLinesCalculator::CalcThread<T>::CalculateEqui
 
 	double dist = 0;
 	double t = 0;
-	unsigned int num_steps = (m_Solver->IsAdaptive() ? 800000 : 1500000);
+	const unsigned int num_steps = (m_Solver->IsAdaptive() ? 800000 : 1500000);
 	double step = (m_Solver->IsAdaptive() ? 0.001 : 0.0001);
 	double next_step = step;
 
@@ -227,7 +226,7 @@ void FieldLinesCalculator::StartCalculating(const TheElectricField *theField)
 	if (NULL == theField) return;
 
 	bool has_different_signs;
-	int total_charge = theField->GetTotalCharge(has_different_signs);
+	const int total_charge = theField->GetTotalCharge(has_different_signs);
 	
 	Vector2D<double> point;
 
@@ -235,7 +234,7 @@ void FieldLinesCalculator::StartCalculating(const TheElectricField *theField)
 	for (const auto &charge : theField->charges) {
 		if (charge.charge == 0) continue;
 
-		double angle_step = 2.*M_PI / (fabs(charge.charge)*theApp.options.numLinesOnUnitCharge);
+		const double angle_step = 2.*M_PI / (fabs(charge.charge)*theApp.options.numLinesOnUnitCharge);
 
 
 		angle_start = - angle_step / 2. - M_PI;

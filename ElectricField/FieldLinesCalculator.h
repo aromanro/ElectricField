@@ -27,6 +27,7 @@ protected:
 
 		bool isEquipotential;
 		double old_potential;
+		
 	} FieldLineJob;
 
 
@@ -52,7 +53,7 @@ protected:
 			FunctorForE(const TheElectricField *field = NULL) : FunctorForCalc(field), charge_sign(1) {};
 
 			inline Vector2D<double> operator()(double /*t*/, const Vector2D<double>& pos) {
-				Vector2D<double> v = theField->ENormalized(pos);
+				const Vector2D<double> v = theField->ENormalized(pos);
 
 				return charge_sign > 0 ? v : -v;
 			};

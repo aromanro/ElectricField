@@ -14,7 +14,7 @@ FieldLine::~FieldLine()
 }
 
 
-void FieldLine::Draw(CHwndRenderTarget* renderTarget, CRect& rect, bool isPotential) const
+void FieldLine::Draw(CHwndRenderTarget* renderTarget, const CRect& rect, bool isPotential) const
 {
 	if (points.empty()) return;
 
@@ -41,10 +41,10 @@ void FieldLine::Draw(CHwndRenderTarget* renderTarget, CRect& rect, bool isPotent
 		
 		for (auto it = points.begin(); it != points.end(); ++it)
 		{
-			pt1.x = (float)(theApp.options.distanceUnitLength * it->X);
-			pt1.y = (float)(theApp.options.distanceUnitLength * it->Y);
+			pt1.x = static_cast<float>(theApp.options.distanceUnitLength * it->X);
+			pt1.y = static_cast<float>(theApp.options.distanceUnitLength * it->Y);
 
-			if (irect.PtInRect(CPoint((int)pt1.x, (int)pt1.y)))
+			if (irect.PtInRect(CPoint(static_cast<int>(pt1.x), static_cast<int>(pt1.y))))
 			{
 				if (!opened)
 				{
@@ -68,8 +68,8 @@ void FieldLine::Draw(CHwndRenderTarget* renderTarget, CRect& rect, bool isPotent
 				break;
 			}
 
-			pt2.x = (float)(theApp.options.distanceUnitLength * it->X);
-			pt2.y = (float)(theApp.options.distanceUnitLength * it->Y);
+			pt2.x = static_cast<float>(theApp.options.distanceUnitLength * it->X);
+			pt2.y = static_cast<float>(theApp.options.distanceUnitLength * it->Y);
 
 			if (++it == points.end()) {
 				morePoints = true;
@@ -77,8 +77,8 @@ void FieldLine::Draw(CHwndRenderTarget* renderTarget, CRect& rect, bool isPotent
 				break;
 			}
 
-			pt3.x = (float)(theApp.options.distanceUnitLength * it->X);
-			pt3.y = (float)(theApp.options.distanceUnitLength * it->Y);
+			pt3.x = static_cast<float>(theApp.options.distanceUnitLength * it->X);
+			pt3.y = static_cast<float>(theApp.options.distanceUnitLength * it->Y);
 
 			sink->AddBezier(D2D1::BezierSegment(pt1, pt2, pt3));
 		}
@@ -102,7 +102,7 @@ void FieldLine::Draw(CHwndRenderTarget* renderTarget, CRect& rect, bool isPotent
 
 		CD2DSolidColorBrush *pBrush = new CD2DSolidColorBrush(renderTarget, isPotential ? theApp.options.potentialFieldLineColor : theApp.options.electricFieldLineColor);
 
-		renderTarget->DrawGeometry(&geometry, pBrush, (float)(isPotential ? theApp.options.potentialFieldLineThickness : theApp.options.electricFieldLineThickness));
+		renderTarget->DrawGeometry(&geometry, pBrush, static_cast<float>(isPotential ? theApp.options.potentialFieldLineThickness : theApp.options.electricFieldLineThickness));
 
 		delete pBrush;
 	}
@@ -125,21 +125,21 @@ void FieldLine::Draw(CDC* pDC, float zoom) const
 
 	for (auto& point : points)
 	{
-		if (!rect.PtInRect(CPoint((int)point.X, (int)point.Y)))
+		if (!rect.PtInRect(CPoint(static_cast<int>(point.X), static_cast<int>(point.Y))))
 		{
 			DrawBezierAndLine(pDC, gdiPoints);
 			gdiPoints.clear();
 			continue;
 		}
 		
-		gdiPoints.push_back(CPoint((int)(zoom * point.X * theApp.options.distanceUnitLength), (int)(zoom * point.Y * theApp.options.distanceUnitLength)));
+		gdiPoints.push_back(CPoint(static_cast<int>(zoom * point.X * theApp.options.distanceUnitLength), static_cast<int>(zoom * point.Y * theApp.options.distanceUnitLength)));
 		
 		if (gdiPoints.size() == 1) pDC->MoveTo(gdiPoints.back());
 		else if (gdiPoints.size() == 16)
 		{
-			pDC->PolyBezier(gdiPoints.data(), (int)gdiPoints.size());
+			pDC->PolyBezier(gdiPoints.data(), static_cast<int>(gdiPoints.size()));
 			gdiPoints.clear();
-			gdiPoints.push_back(CPoint((int)(zoom * point.X * theApp.options.distanceUnitLength), (int)(zoom * point.Y * theApp.options.distanceUnitLength)));
+			gdiPoints.push_back(CPoint(static_cast<int>(zoom * point.X * theApp.options.distanceUnitLength), static_cast<int>(zoom * point.Y * theApp.options.distanceUnitLength)));
 		}
 	}
 
@@ -154,7 +154,7 @@ void FieldLine::DrawBezierAndLine(CDC* pDC, std::vector<CPoint>& gdiPoints) cons
 
 	std::vector<CPoint> gdiPointsLine;
 
-	unsigned int l = gdiPoints.size() % 3;
+	const unsigned int l = gdiPoints.size() % 3;
 
 	CPoint endPoint;
 	if (0 == l)
@@ -174,7 +174,7 @@ void FieldLine::DrawBezierAndLine(CDC* pDC, std::vector<CPoint>& gdiPoints) cons
 	}
 
 	if (gdiPoints.size() >= 4)
-		pDC->PolyBezier(gdiPoints.data(), (int)gdiPoints.size());
+		pDC->PolyBezier(gdiPoints.data(), static_cast<int>(gdiPoints.size()));
 
 	if (gdiPointsLine.size())
 		pDC->MoveTo(gdiPoints.back());
@@ -188,7 +188,7 @@ void FieldLine::AdjustForBezier()
 {
 	for (auto it = points.begin(); it != points.end();)
 	{
-		Vector2D<double> &pt0 = *it;
+		const Vector2D<double> &pt0 = *it;
 		++it;
 		if (it == points.end()) break;
 		Vector2D<double> &pt1 = *it;
@@ -197,7 +197,7 @@ void FieldLine::AdjustForBezier()
 		Vector2D<double> &pt2 = *it;
 		++it;
 		if (it == points.end()) break;
-		Vector2D<double> &pt3 = *it;
+		const Vector2D<double> &pt3 = *it;
 
 		double Xo1, Yo1, Xo2, Yo2;
 		
@@ -216,7 +216,7 @@ void FieldLine::AdjustForBezier(const Vector2D<double>& pt0, const Vector2D<doub
 {
 	double t1 = (pt1 - pt0).Length();
 	double t2 = t1 + (pt2 - pt1).Length();
-	double t3 = t1 + t2 + (pt3 - pt2).Length();
+	const double t3 = t1 + t2 + (pt3 - pt2).Length();
 
 	t1 /= t3;
 	t2 /= t3;

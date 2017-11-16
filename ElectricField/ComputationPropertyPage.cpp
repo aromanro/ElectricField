@@ -75,7 +75,7 @@ void ComputationPropertyPage::ApplyValues()
 	theApp.options.numLinesOnUnitCharge = m_nrLines;
 	theApp.options.numThreads = m_nrThreads;
 
-	theApp.options.potentialInterval = ((double)m_Slider.GetPos())/1000.;
+	theApp.options.potentialInterval = static_cast<double>(m_Slider.GetPos())/1000.;
 
 	theApp.options.Save();
 }
@@ -126,7 +126,7 @@ BOOL ComputationPropertyPage::OnInitDialog()
 
 	//0.025
 	m_Slider.SetRange(10,500);
-	m_Slider.SetPos((int)(theApp.options.potentialInterval * 1000.));
+	m_Slider.SetPos(static_cast<int>(theApp.options.potentialInterval * 1000.));
 
 	CString str;
 	str.Format(L"%.2f", theApp.options.potentialInterval);
@@ -147,7 +147,7 @@ void ComputationPropertyPage::OnTRBNThumbPosChangingSlider1(NMHDR *pNMHDR, LRESU
 	*pResult = 0;
 
 	CString str;
-	str.Format(L"%.2f", ((double)pNMTPC->dwPos)/1000.);
+	str.Format(L"%.2f", static_cast<double>(pNMTPC->dwPos)/1000.);
 	m_Static.SetWindowText(str);
 
 	SetModified();

@@ -109,8 +109,7 @@ BOOL CElectricFieldApp::InitInstance()
 
 	// Register the application's document templates.  Document templates
 	//  serve as the connection between documents, frame windows and views
-	CMultiDocTemplate* pDocTemplate;
-	pDocTemplate = new CMultiDocTemplate(IDR_DipoleTYPE,
+	CMultiDocTemplate* pDocTemplate = new CMultiDocTemplate(IDR_DipoleTYPE,
 		RUNTIME_CLASS(CDipoleDoc),
 		RUNTIME_CLASS(CChildFrame), // custom MDI child frame
 		RUNTIME_CLASS(CElectricFieldView));

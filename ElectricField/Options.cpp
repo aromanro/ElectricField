@@ -33,16 +33,16 @@ Options::~Options()
 void Options::Load()
 {
 	// computing options
-	int res = (int)theApp.GetProfileInt(L"options", L"calculateEquipotentials", 1);
+	int res = static_cast<int>(theApp.GetProfileInt(L"options", L"calculateEquipotentials", 1));
 	calculateEquipotentials = (res ? true : false);
 
 	numLinesOnUnitCharge = theApp.GetProfileInt(L"options", L"numLines", 16);
 	numThreads = theApp.GetProfileInt(L"options", L"numThreads", 4);
 
-	res = (int)theApp.GetProfileInt(L"options", L"potentialInterval", 100);
-	potentialInterval = ((double)res) / 1000.;
+	res = static_cast<int>(theApp.GetProfileInt(L"options", L"potentialInterval", 100));
+	potentialInterval = static_cast<double>(res) / 1000.;
 
-	calculationMethod = (CalculationMethod) theApp.GetProfileInt(L"options", L"method", CalculationMethod::EulerMethod);
+	calculationMethod = static_cast<CalculationMethod>(theApp.GetProfileInt(L"options", L"method", CalculationMethod::EulerMethod));
 
 	//drawing options
 	electricFieldLineThickness = theApp.GetProfileInt(L"options", L"elFieldLineThick", 1);
@@ -81,14 +81,14 @@ void Options::Save()
 {
 	// computing options
 	theApp.WriteProfileInt(L"options", L"calculateEquipotentials", calculateEquipotentials ? 1 : 0);
-	theApp.WriteProfileInt(L"options", L"numLines", (int)numLinesOnUnitCharge);
-	theApp.WriteProfileInt(L"options", L"numThreads", (int)numThreads);
-	theApp.WriteProfileInt(L"options", L"potentialInterval", (int)(1000 * potentialInterval));
+	theApp.WriteProfileInt(L"options", L"numLines", static_cast<int>(numLinesOnUnitCharge));
+	theApp.WriteProfileInt(L"options", L"numThreads", static_cast<int>(numThreads));
+	theApp.WriteProfileInt(L"options", L"potentialInterval", static_cast<int>(1000 * potentialInterval));
 	theApp.WriteProfileInt(L"options", L"method", calculationMethod);
 
 	//drawing options
-	theApp.WriteProfileInt(L"options", L"elFieldLineThick", (int)electricFieldLineThickness);
-	theApp.WriteProfileInt(L"options", L"potFieldLineThick", (int)potentialFieldLineThickness);
+	theApp.WriteProfileInt(L"options", L"elFieldLineThick", static_cast<int>(electricFieldLineThickness));
+	theApp.WriteProfileInt(L"options", L"potFieldLineThick", static_cast<int>(potentialFieldLineThickness));
 
 	theApp.WriteProfileBinary(L"options", L"positiveChargeColor", (LPBYTE)&positiveChargeColor, sizeof(COLORREF));
 	theApp.WriteProfileBinary(L"options", L"negativeChargeColor", (LPBYTE)&negativeChargeColor, sizeof(COLORREF));

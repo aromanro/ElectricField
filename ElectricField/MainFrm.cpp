@@ -48,7 +48,7 @@ static UINT indicators[] =
 CMainFrame::CMainFrame()
 {
 	// TODO: add member initialization code here
-	theApp.m_nAppLook = (UINT)theApp.GetInt(_T("ApplicationLook"), ID_VIEW_APPLOOK_VS_2008);
+	theApp.m_nAppLook = static_cast<UINT>(theApp.GetInt(_T("ApplicationLook"), ID_VIEW_APPLOOK_VS_2008));
 }
 
 CMainFrame::~CMainFrame()
@@ -59,8 +59,6 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 {
 	if (CMDIFrameWndEx::OnCreate(lpCreateStruct) == -1)
 		return -1;
-
-	BOOL bNameValid;
 
 	CMDITabInfo mdiTabParams;
 	mdiTabParams.m_style = CMFCTabCtrl::STYLE_3D_ONENOTE; // other styles available...
@@ -82,14 +80,14 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	CMFCPopupMenu::SetForceMenuFocus(FALSE);
 
 	if (!m_wndToolBar.CreateEx(this, TBSTYLE_FLAT, WS_CHILD | WS_VISIBLE | CBRS_TOP | CBRS_GRIPPER | CBRS_TOOLTIPS | CBRS_FLYBY | CBRS_SIZE_DYNAMIC) ||
-		!m_wndToolBar.LoadToolBar((UINT)(theApp.m_bHiColorIcons ? IDR_MAINFRAME_256 : IDR_MAINFRAME)))
+		!m_wndToolBar.LoadToolBar(static_cast<UINT>(theApp.m_bHiColorIcons ? IDR_MAINFRAME_256 : IDR_MAINFRAME)))
 	{
 		TRACE0("Failed to create toolbar\n");
 		return -1;      // fail to create
 	}
 
 	CString strToolBarName;
-	bNameValid = strToolBarName.LoadString(IDS_TOOLBAR_STANDARD);
+	BOOL bNameValid = strToolBarName.LoadString(IDS_TOOLBAR_STANDARD);
 	ASSERT(bNameValid);
 	m_wndToolBar.SetWindowText(strToolBarName);
 
@@ -122,7 +120,7 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	EnableAutoHidePanes(CBRS_ALIGN_ANY);
 
 	// Load menu item image (not placed on any standard toolbars):
-	CMFCToolBar::AddToolBarForImageCollection((UINT)IDR_MENU_IMAGES, (UINT)(theApp.m_bHiColorIcons ? IDB_MENU_IMAGES_24 : 0));
+	CMFCToolBar::AddToolBarForImageCollection(static_cast<UINT>(IDR_MENU_IMAGES), static_cast<UINT>(theApp.m_bHiColorIcons ? IDB_MENU_IMAGES_24 : 0));
 
 	// create docking windows
 	if (!CreateDockingWindows())
@@ -321,7 +319,7 @@ void CMainFrame::OnApplicationLook(UINT id)
 
 	RedrawWindow(NULL, NULL, RDW_ALLCHILDREN | RDW_INVALIDATE | RDW_UPDATENOW | RDW_FRAME | RDW_ERASE);
 
-	theApp.WriteInt(_T("ApplicationLook"), (int)theApp.m_nAppLook);
+	theApp.WriteInt(_T("ApplicationLook"), static_cast<int>(theApp.m_nAppLook));
 }
 
 void CMainFrame::OnUpdateApplicationLook(CCmdUI* pCmdUI)

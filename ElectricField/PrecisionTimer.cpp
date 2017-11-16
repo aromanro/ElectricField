@@ -14,7 +14,7 @@ PrecisionTimer::PrecisionTimer(bool start)
 
 double PrecisionTimer::LargeIntToSeconds(const LARGE_INTEGER & val) const
 {
-	return ((double)val.QuadPart / (double)freq.QuadPart);
+	return static_cast<double>(val.QuadPart) / freq.QuadPart;
 }
 
 

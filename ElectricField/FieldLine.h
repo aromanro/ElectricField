@@ -20,8 +20,8 @@ public:
 	{
 		if (points.empty())	points.push_back(pt);
 		else {
-			Vector2D<double>& old = points.back();
-			double dif = (old - pt).Length() * (double)theApp.options.distanceUnitLength;
+			const Vector2D<double>& old = points.back();
+			const double dif = (old - pt).Length() * static_cast<double>(theApp.options.distanceUnitLength);
 
 			// do not add points that are very far away
 			if ((dif >= 256. && pt.Length() >= 2000 && pt.Length() < 3000) || (dif >= 64. && pt.Length() > 1000 && pt.Length() < 2000) || (dif >= 8. && pt.Length() <= 1000))
@@ -29,7 +29,7 @@ public:
 		}
 	}
 
-	void Draw(CHwndRenderTarget* renderTarget, CRect& rect, bool isPotential = false) const;
+	void Draw(CHwndRenderTarget* renderTarget, const CRect& rect, bool isPotential = false) const;
 	void Draw(CDC* pDC, float zoom) const;
 private:
 	void DrawBezierAndLine(CDC* pDC, std::vector<CPoint>& gdiPoints) const;

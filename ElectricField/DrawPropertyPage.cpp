@@ -73,7 +73,7 @@ void DrawPropertyPage::ApplyValues()
 	POSITION posDocTemplate = theApp.GetFirstDocTemplatePosition();
 	while (posDocTemplate)
 	{
-		CDocTemplate* pDocTemplate = theApp.GetNextDocTemplate(posDocTemplate);
+		const CDocTemplate* pDocTemplate = theApp.GetNextDocTemplate(posDocTemplate);
 
 		// get each document open in given document template
 		POSITION posDoc = pDocTemplate->GetFirstDocPosition();

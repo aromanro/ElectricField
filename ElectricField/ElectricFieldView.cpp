@@ -99,7 +99,7 @@ void CElectricFieldView::Dump(CDumpContext& dc) const
 CElectricFieldDoc* CElectricFieldView::GetDocument() const // non-debug version is inline
 {
 	ASSERT(m_pDocument->IsKindOf(RUNTIME_CLASS(CElectricFieldDoc)));
-	return (CElectricFieldDoc*)m_pDocument;
+	return dynamic_cast<CElectricFieldDoc*>(m_pDocument);
 }
 #endif //_DEBUG
 
@@ -163,7 +163,7 @@ void CElectricFieldView::OnPrint(CDC* pDC, CPrintInfo* /*pInfo*/)
 
 	int save = pDC->SaveDC();	
 
-	pDoc->calculator->field.Draw(pDC, (float)(pDC->GetDeviceCaps(PHYSICALWIDTH) / (GetSystemMetrics(SM_CXSCREEN)/2)));
+	pDoc->calculator->field.Draw(pDC, static_cast<float>(pDC->GetDeviceCaps(PHYSICALWIDTH) / (GetSystemMetrics(SM_CXSCREEN)/2.)));
 
 	pDC->RestoreDC(save);
 }

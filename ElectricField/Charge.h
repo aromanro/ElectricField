@@ -22,7 +22,7 @@ public:
 
 	inline bool HitCharge(const Vector2D<double>& pos) const
 	{
-		if ((position - pos).Length() < ((theApp.options.chargeRadius/1.5) / (double)theApp.options.distanceUnitLength)) return true;
+		if ((position - pos).Length() < theApp.options.chargeRadius / 1.5 / static_cast<double>(theApp.options.distanceUnitLength)) return true;
 
 		return false;
 	}
@@ -36,8 +36,8 @@ public:
 
 	inline Vector2D<double> E(const Vector2D<double>& pos) const
 	{
-		Vector2D<double> toPos = pos - position;
-		double len2 = toPos * toPos;
+		const Vector2D<double> toPos = pos - position;
+		const double len2 = toPos * toPos;
 		Vector2D<double> result = toPos / (len2 * sqrt(len2));
 
 		result *= charge;
