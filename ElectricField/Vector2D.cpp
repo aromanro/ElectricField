@@ -104,14 +104,14 @@ template<typename T> Vector2D<T>& Vector2D<T>::operator/=(T s)
 
 template<typename T> T Vector2D<T>::Length() const
 {
-	T w = *this * *this;
+	const T w = *this * *this;
 
 	return sqrt(w);
 }
 
 template<typename T> Vector2D<T> Vector2D<T>::Normalize() const
 {
-	T len = Length();
+	const T len = Length();
 
 	if (len != 0)
 		return *this / len;
