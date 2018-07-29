@@ -37,8 +37,8 @@ namespace RungeKutta {
 	static const double EulerWeights[] = { 1 };
 	static const double EulerNodes[] = { 0 };
 
-	template<typename T> Euler<T>::Euler(void)
-		: RungeKutta(EulerWeights, EulerNodes, NULL)
+	template<typename T> Euler<T>::Euler()
+		: RungeKutta<T, 1>(EulerWeights, EulerNodes, NULL)
 	{
 	}
 
@@ -51,8 +51,8 @@ namespace RungeKutta {
 	static const double row[] = { 1. / 2. };
 	static const double *MidpointCoeff[] = { row };
 
-	template<typename T> Midpoint<T>::Midpoint(void)
-		: RungeKutta(MidpointWeights, MidpointNodes, MidpointCoeff)
+	template<typename T> Midpoint<T>::Midpoint()
+		: RungeKutta<T, 2>(MidpointWeights, MidpointNodes, MidpointCoeff)
 	{
 	}
 
@@ -65,8 +65,8 @@ namespace RungeKutta {
 	static const double rrow[] = { 2. / 3. };
 	static const double *RalstonCoeff[] = { rrow };
 
-	template<typename T> Ralston<T>::Ralston(void)
-		: RungeKutta(RalstonWeights, RalstonNodes, RalstonCoeff)
+	template<typename T> Ralston<T>::Ralston()
+		: RungeKutta<T, 2>(RalstonWeights, RalstonNodes, RalstonCoeff)
 	{
 	}
 
@@ -78,8 +78,8 @@ namespace RungeKutta {
 	static const double hrow[] = { 1 };
 	static const double *HeunCoeff[] = { hrow };
 
-	template<typename T> Heun<T>::Heun(void)
-		: RungeKutta(HeunWeights, HeunNodes, HeunCoeff)
+	template<typename T> Heun<T>::Heun()
+		: RungeKutta<T, 2>(HeunWeights, HeunNodes, HeunCoeff)
 	{
 	}
 
@@ -95,8 +95,8 @@ namespace RungeKutta {
 	static const double row3[] = { 0, 0, 1 };
 	static const double *RK4coeff[] = { row1, row2, row3 };
 
-	template<typename T> RK4<T>::RK4(void)
-		: RungeKutta(RK4weights, RK4nodes, RK4coeff)
+	template<typename T> RK4<T>::RK4()
+		: RungeKutta<T, 4>(RK4weights, RK4nodes, RK4coeff)
 	{
 	}
 
@@ -112,8 +112,8 @@ namespace RungeKutta {
 	static const double RK3per8row3[] = { 1, -1, 1 };
 	static const double *RK3per8coeff[] = { RK3per8row1, RK3per8row2, RK3per8row3 };
 
-	template<typename T> RK3per8<T>::RK3per8(void)
-		: RungeKutta(RK3per8weights, RK3per8nodes, RK3per8coeff)
+	template<typename T> RK3per8<T>::RK3per8()
+		: RungeKutta<T, 4>(RK3per8weights, RK3per8nodes, RK3per8coeff)
 	{
 	}
 
@@ -124,8 +124,8 @@ namespace RungeKutta {
 
 	static const double EulerWeightsExt[] = { 1, 0 };
 
-	template<typename T> AdaptiveHeunEuler<T>::AdaptiveHeunEuler(void)
-		:   AdaptiveRungeKutta(HeunWeights, EulerWeightsExt, HeunNodes, HeunCoeff)
+	template<typename T> AdaptiveHeunEuler<T>::AdaptiveHeunEuler()
+		:   AdaptiveRungeKutta<T, 2, 2>(HeunWeights, EulerWeightsExt, HeunNodes, HeunCoeff)
 	{
 	}
 
@@ -141,7 +141,7 @@ namespace RungeKutta {
 	static const double *BSCoeff[] = { BSrow1, BSrow2, BSrow3 };
 
 	template<typename T> AdaptiveBogackiShampine<T>::AdaptiveBogackiShampine(void)
-		: AdaptiveRungeKutta(BSweightsHigh, BSweightsLow, BSnodes, BSCoeff)
+		: AdaptiveRungeKutta<T, 4, 3>(BSweightsHigh, BSweightsLow, BSnodes, BSCoeff)
 	{
 	}
 
@@ -160,8 +160,8 @@ namespace RungeKutta {
 	static const double *CKCoeff[] = { CKrow1, CKrow2, CKrow3, CKrow4, CKrow5 };
 
 
-	template<typename T> AdaptiveCashKarp<T>::AdaptiveCashKarp(void)
-		: AdaptiveRungeKutta(CKweightsHigh, CKweightsLow, CKnodes, CKCoeff)
+	template<typename T> AdaptiveCashKarp<T>::AdaptiveCashKarp()
+		: AdaptiveRungeKutta<T,6,5>(CKweightsHigh, CKweightsLow, CKnodes, CKCoeff)
 	{
 	}
 
@@ -180,8 +180,8 @@ namespace RungeKutta {
 	static const double RKFrow5[] = { -8./27., 2, -3544./2565., 1859./4104., -11./40. };
 	static const double *RKFCoeff[] = { RKFrow1, RKFrow2, RKFrow3, RKFrow4, RKFrow5 };
 
-	template<typename T> AdaptiveFehlberg<T>::AdaptiveFehlberg(void)
-		: AdaptiveRungeKutta(RKFweightsHigh, RKFweightsLow, RKFnodes, RKFCoeff)
+	template<typename T> AdaptiveFehlberg<T>::AdaptiveFehlberg()
+		: AdaptiveRungeKutta<T,6,5>(RKFweightsHigh, RKFweightsLow, RKFnodes, RKFCoeff)
 	{
 	}
 
@@ -199,8 +199,8 @@ namespace RungeKutta {
 	static const double DProw6[] = { 35. / 384., 0, 500. / 1113., 125. / 192., -2187. / 6784., 11. / 84. };
 	static const double *DPCoeff[] = { DProw1, DProw2, DProw3, DProw4, DProw5, DProw6 };
 
-	template<typename T> AdaptiveDormandPrince<T>::AdaptiveDormandPrince(void)
-		: AdaptiveRungeKutta(DPweightsHigh, DPweightsLow, DPnodes, DPCoeff)
+	template<typename T> AdaptiveDormandPrince<T>::AdaptiveDormandPrince()
+		: AdaptiveRungeKutta<T,7,5>(DPweightsHigh, DPweightsLow, DPnodes, DPCoeff)
 	{
 	}
 	

@@ -94,69 +94,69 @@ namespace RungeKutta {
 	template<typename T> class Euler : public RungeKutta<T, 1>
 	{
 	public:
-		Euler(void);
+		Euler();
 	};
 
 	template<typename T> class Midpoint : public RungeKutta<T, 2>
 	{
 	public:
-		Midpoint(void);
+		Midpoint();
 	};
 
 	template<typename T> class Heun : public RungeKutta<T, 2>
 	{
 	public:
-		Heun(void);
+		Heun();
 	};
 
 	template<typename T> class Ralston : public RungeKutta<T, 2>
 	{
 	public:
-		Ralston(void);
+		Ralston();
 	};
 
 	template<typename T> class RK4 : public RungeKutta<T, 4>
 	{
 	public:
-		RK4(void);
+		RK4();
 	};
 
 	template<typename T> class RK3per8 : public RungeKutta<T, 4>
 	{
 	public:
-		RK3per8(void);
+		RK3per8();
 	};
 
 
 	template<typename T> class AdaptiveHeunEuler : public AdaptiveRungeKutta<T, 2, 2>
 	{
 	public:
-		AdaptiveHeunEuler(void);
+		AdaptiveHeunEuler();
 	};
 
 	template<typename T> class AdaptiveBogackiShampine : public AdaptiveRungeKutta<T, 4, 3>
 	{
 	public:
-		AdaptiveBogackiShampine(void);
+		AdaptiveBogackiShampine();
 	};
 
 	template<typename T> class AdaptiveCashKarp : public AdaptiveRungeKutta<T,6,5>
 	{
 	public:
-		AdaptiveCashKarp(void);
+		AdaptiveCashKarp();
 	};
 
 	template<typename T> class AdaptiveFehlberg : public AdaptiveRungeKutta<T,6,5>
 	{
 	public:
-		AdaptiveFehlberg(void);
+		AdaptiveFehlberg();
 	};
 
 	
 	template<typename T> class AdaptiveDormandPrince : public AdaptiveRungeKutta<T,7,5>
 	{
 	public:
-		AdaptiveDormandPrince(void);
+		AdaptiveDormandPrince();
 	};
 	
 }
