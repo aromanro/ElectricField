@@ -9,10 +9,6 @@ FieldLine::FieldLine()
 }
 
 
-FieldLine::~FieldLine()
-{
-}
-
 
 void FieldLine::Draw(CHwndRenderTarget* renderTarget, const CRect& rect, bool isPotential) const
 {

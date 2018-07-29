@@ -118,7 +118,6 @@ public:
 	std::atomic_bool Terminate;
 
 	FieldLinesCalculator();
-	~FieldLinesCalculator();
 
 	void Clear();
 

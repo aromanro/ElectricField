@@ -207,10 +207,6 @@ FieldLinesCalculator::FieldLinesCalculator()
 }
 
 
-FieldLinesCalculator::~FieldLinesCalculator()
-{	
-}
-
 
 void FieldLinesCalculator::Clear()
 {
@@ -227,6 +223,7 @@ void FieldLinesCalculator::StartCalculating(const TheElectricField *theField)
 
 	bool has_different_signs;
 	const int total_charge = theField->GetTotalCharge(has_different_signs);
+	const double r = theApp.options.chargeRadius / theApp.options.distanceUnitLength;
 	
 	Vector2D<double> point;
 
@@ -236,14 +233,12 @@ void FieldLinesCalculator::StartCalculating(const TheElectricField *theField)
 
 		const double angle_step = 2.*M_PI / (fabs(charge.charge)*theApp.options.numLinesOnUnitCharge);
 
-
 		angle_start = - angle_step / 2. - M_PI;
 		if (sign(total_charge) != sign(charge.charge))	angle_start += M_PI + angle_step;
 
 		for (double angle = angle_start; angle < 2.*M_PI + angle_start - angle_step / 4.; angle += angle_step) {
 			if ((angle != angle_start || !theApp.options.calculateEquipotentials) && sign(total_charge) != sign(charge.charge)) break;
 
-			double r = theApp.options.chargeRadius / theApp.options.distanceUnitLength;
 			point.X = charge.position.X + r*cos(angle);
 			point.Y = charge.position.Y + r*sin(angle);
 

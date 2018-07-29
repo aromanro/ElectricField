@@ -14,7 +14,6 @@ public:
 	std::vector<Vector2D<double>> points;
 	
 	FieldLine();
-	~FieldLine();
 
 	inline void AddPoint(Vector2D<double>& pt)
 	{
