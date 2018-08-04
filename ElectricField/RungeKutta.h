@@ -58,12 +58,12 @@ namespace RungeKutta {
 				for (unsigned int stage = 0; stage < Stages; ++stage)
 				{                                                
 					T accum(0);                                     					
-					for (unsigned int j = 0; j < stage; ++j) accum += m_coefficients[stage - 1][j] * K[j];
+					for (unsigned int j = 0; j < stage; ++j) accum += RungeKutta<T, Stages>::m_coefficients[stage - 1][j] * RungeKutta<T, Stages>::K[j];
 					
-					K[stage] = Function(t + h * m_nodes[stage], curVal + h * accum);
+					RungeKutta<T, Stages>::K[stage] = Function(t + h * RungeKutta<T, Stages>::m_nodes[stage], curVal + h * accum);
 
-					thesumHigh += m_weights[stage] * K[stage];   
-					thesumLow  += m_low_order_weights[stage] * K[stage];  
+					thesumHigh += RungeKutta<T, Stages>::m_weights[stage] * RungeKutta<T, Stages>::K[stage];   
+					thesumLow  += m_low_order_weights[stage] * RungeKutta<T, Stages>::K[stage];  
 				}
 
 				const double error = abs((thesumHigh - thesumLow) * h);

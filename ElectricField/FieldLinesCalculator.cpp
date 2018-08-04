@@ -52,7 +52,7 @@ template<class T> inline void FieldLinesCalculator::CalcThread<T>::PostCalculate
 
 template<class T> inline void FieldLinesCalculator::CalcThread<T>::CalculateElectricFieldLine()
 {
-	unsigned int steps = 30000;
+	unsigned int steps = 40000;
 	
 	//dummy values
 	double precision = 0.01;
