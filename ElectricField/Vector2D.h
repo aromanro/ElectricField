@@ -32,7 +32,7 @@ public:
 	Vector2D& operator*=(T s);
 	Vector2D& operator/=(T s);
 
-	T Length() const;
+	double Length() const;
 	Vector2D Normalize() const;
 };
 

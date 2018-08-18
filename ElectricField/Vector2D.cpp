@@ -102,9 +102,9 @@ template<typename T> Vector2D<T>& Vector2D<T>::operator/=(T s)
 }
 
 
-template<typename T> T Vector2D<T>::Length() const
+template<typename T> double Vector2D<T>::Length() const
 {
-	const T w = *this * *this;
+	const double w = *this * *this;
 
 	return sqrt(w);
 }
