@@ -100,15 +100,17 @@
 #define IDC_MFCCOLORBUTTON3             1017
 #define IDC_STATIC1                     1017
 #define IDC_MFCCOLORBUTTON4             1018
+#define IDC_MFCLINK1                    1018
+#define IDC_MFCLINK2                    1019
 #define ID_VIEW_OPTIONS                 32771
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        314
+#define _APS_NEXT_RESOURCE_VALUE        315
 #define _APS_NEXT_COMMAND_VALUE         32774
-#define _APS_NEXT_CONTROL_VALUE         1018
+#define _APS_NEXT_CONTROL_VALUE         1019
 #define _APS_NEXT_SYMED_VALUE           312
 #endif
 #endif
