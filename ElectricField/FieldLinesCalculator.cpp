@@ -8,11 +8,9 @@ const double M_PI = 3.1415926535897932384626433832795028841971693993751;
 
 template<class T> FieldLinesCalculator::CalcThread<T>::CalcThread(FieldLinesCalculator* calculator, const TheElectricField *field, T *solver)
 	: m_pCalculator(calculator), m_Solver(solver),
+	functorE(field), functorV(field),
 	calculateEquipotentials(theApp.options.calculateEquipotentials), potentialInterval(theApp.options.potentialInterval), distanceUnitLength(theApp.options.distanceUnitLength)
 {
-	functorE.theField = field;
-	functorV.theField = field;
-
 	Start();
 }
 
@@ -154,7 +152,7 @@ template<class T> inline void FieldLinesCalculator::CalcThread<T>::CalculateEqui
 
 template<class T> void FieldLinesCalculator::CalcThread<T>::Calculate()
 {
-	for (;;)
+	for (;!m_pCalculator->Terminate;)
 	{
 		// grab a job from the job list
 		{
@@ -165,29 +163,8 @@ template<class T> void FieldLinesCalculator::CalcThread<T>::Calculate()
 			m_Job = m_pCalculator->m_jobs.front();
 			m_pCalculator->m_jobs.pop_front();
 		}
-
-		if (m_Job.isEquipotential) {
-			CalculateEquipotential();
-
-			if (m_pCalculator->Terminate) break;
-
-			std::lock_guard<std::mutex> lock(m_pCalculator->m_potentialLinesSection);
-			m_pCalculator->potentialFieldLines.push_back(PotentialLine());
-			m_pCalculator->potentialFieldLines.back().potential = m_Job.old_potential;
-			m_pCalculator->potentialFieldLines.back().weightCenter = fieldLine.weightCenter;
-			m_pCalculator->potentialFieldLines.back().points.swap(fieldLine.points);
-		}
-		else {
-			functorE.charge_sign = sign(m_Job.charge.charge);
-
-			CalculateElectricFieldLine();
-
-			if (m_pCalculator->Terminate) break;
-
-			std::lock_guard<std::mutex> lock(m_pCalculator->m_electricLinesSection);
-			m_pCalculator->electricFieldLines.push_back(FieldLine());
-			m_pCalculator->electricFieldLines.back().points.swap(fieldLine.points);
-		}
+		
+		ProcessJob();
 	}
 
 	FieldLinesCalculator* calc = m_pCalculator;
@@ -198,6 +175,33 @@ template<class T> void FieldLinesCalculator::CalcThread<T>::Calculate()
 }
 
 
+template<class T> void FieldLinesCalculator::CalcThread<T>::ProcessJob()
+{
+	if (m_Job.isEquipotential) 
+	{
+		CalculateEquipotential();
+
+		if (m_pCalculator->Terminate) return;
+
+		std::lock_guard<std::mutex> lock(m_pCalculator->m_potentialLinesSection);
+		m_pCalculator->potentialFieldLines.push_back(PotentialLine());
+		m_pCalculator->potentialFieldLines.back().potential = m_Job.old_potential;
+		m_pCalculator->potentialFieldLines.back().weightCenter = fieldLine.weightCenter;
+		m_pCalculator->potentialFieldLines.back().points.swap(fieldLine.points);
+	}
+	else 
+	{
+		functorE.charge_sign = sign(m_Job.charge.charge);
+
+		CalculateElectricFieldLine();
+
+		if (m_pCalculator->Terminate) return;
+
+		std::lock_guard<std::mutex> lock(m_pCalculator->m_electricLinesSection);
+		m_pCalculator->electricFieldLines.push_back(FieldLine());
+		m_pCalculator->electricFieldLines.back().points.swap(fieldLine.points);
+	}
+}
 
 
 

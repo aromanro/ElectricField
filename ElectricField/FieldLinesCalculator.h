@@ -96,6 +96,7 @@ protected:
 
 		virtual void Calculate();
 
+		void ProcessJob();
 	public:
 		CalcThread(FieldLinesCalculator* calculator, const TheElectricField *field, T *solver);
 		~CalcThread();

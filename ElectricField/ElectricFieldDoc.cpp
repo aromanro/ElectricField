@@ -239,13 +239,13 @@ void CElectricFieldDoc::OnCloseDocument()
 	if (calculator->CheckStatus())
 	{
 		delete calculator;
-		calculator = NULL;
 	}
 	else
 	{
 		calculator->Terminate = true;
 		theApp.calculators.push_back(calculator);
 	}
+	calculator = NULL;
 
 	CDocument::OnCloseDocument();
 }
