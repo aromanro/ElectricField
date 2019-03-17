@@ -54,7 +54,7 @@ template<class T> inline void FieldLinesCalculator::CalcThread<T>::CalculateElec
 	
 	//dummy values
 	double precision = 0.01;
-	double max_step = 1.;
+	double max_step = 0.1;
 	
 	// if the charges have different signs, the code tries to end all starting lines on some charge
 	// it might need a lot of steps for that - for net charge 0 try even more, all lines should ideally end
@@ -77,12 +77,12 @@ template<class T> inline void FieldLinesCalculator::CalcThread<T>::CalculateElec
 		const double len = m_Job.point.Length() * distanceUnitLength;
 
 		// precision is needed for parts of lines close to the charge
-		const bool needs_precision = (len < 2000);
+		const bool needs_precision = (len < 3000);
 
 		if (m_Solver->IsAdaptive())
 		{
-			precision = (needs_precision ? 0.001 : 0.5);
-			max_step = (needs_precision ? 0.001 : 1.);
+			precision = (needs_precision ? 0.001 : 0.1);
+			max_step = (needs_precision ? 0.001 : 0.1);
 		}
 		else step = (needs_precision ? 0.001 : 0.5);
 
