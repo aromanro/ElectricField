@@ -42,7 +42,7 @@ void Options::Load()
 	res = static_cast<int>(theApp.GetProfileInt(L"options", L"potentialInterval", 100));
 	potentialInterval = static_cast<double>(res) / 1000.;
 
-	calculationMethod = static_cast<CalculationMethod>(theApp.GetProfileInt(L"options", L"method", CalculationMethod::EulerMethod));
+	calculationMethod = static_cast<CalculationMethod>(theApp.GetProfileInt(L"options", L"method", static_cast<int>(CalculationMethod::EulerMethod)));
 
 	//drawing options
 	electricFieldLineThickness = theApp.GetProfileInt(L"options", L"elFieldLineThick", 1);
@@ -84,7 +84,7 @@ void Options::Save()
 	theApp.WriteProfileInt(L"options", L"numLines", static_cast<int>(numLinesOnUnitCharge));
 	theApp.WriteProfileInt(L"options", L"numThreads", static_cast<int>(numThreads));
 	theApp.WriteProfileInt(L"options", L"potentialInterval", static_cast<int>(1000 * potentialInterval));
-	theApp.WriteProfileInt(L"options", L"method", calculationMethod);
+	theApp.WriteProfileInt(L"options", L"method", static_cast<int>(calculationMethod));
 
 	//drawing options
 	theApp.WriteProfileInt(L"options", L"elFieldLineThick", static_cast<int>(electricFieldLineThickness));

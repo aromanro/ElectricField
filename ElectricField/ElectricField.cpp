@@ -32,6 +32,7 @@ END_MESSAGE_MAP()
 // CElectricFieldApp construction
 
 CElectricFieldApp::CElectricFieldApp()
+	: m_nAppLook(0)
 {
 	m_bHiColorIcons = TRUE;
 

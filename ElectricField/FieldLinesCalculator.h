@@ -18,15 +18,15 @@ protected:
 	// some info needed for a field line job
 	typedef struct FieldLineJob {
 		Charge charge;
-		int total_charge;
-		bool has_different_signs;
-		double angle_start;
-		double angle;
+		int total_charge = 0;
+		bool has_different_signs = false;
+		double angle_start = 0;
+		double angle = 0;
 
 		Vector2D<double> point;
 
-		bool isEquipotential;
-		double old_potential;
+		bool isEquipotential = false;
+		double old_potential = 0;
 		
 	} FieldLineJob;
 

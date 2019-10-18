@@ -365,12 +365,13 @@ void CMainFrame::OnSettingChange(UINT uFlags, LPCTSTR lpszSection)
 
 void CMainFrame::OnViewOptions()
 {
-	OptionsPropertySheet sheet(L"Options",this);
+	OptionsPropertySheet *sheet = new OptionsPropertySheet(L"Options",this);
 	ComputationPropertyPage page1;
 	DrawPropertyPage page2;
 
-	sheet.AddPage(&page1);
-	sheet.AddPage(&page2);
+	sheet->AddPage(&page1);
+	sheet->AddPage(&page2);
 
-	sheet.DoModal();
+	sheet->DoModal();
+	delete sheet;
 }

@@ -14,7 +14,7 @@ IMPLEMENT_DYNAMIC(ComputationPropertyPage, CMFCPropertyPage)
 ComputationPropertyPage::ComputationPropertyPage()
 	: CMFCPropertyPage(IDD_COMPUTATIONPROPERTYPAGE)	
 {
-	m_Method = theApp.options.calculationMethod;
+	m_Method = static_cast<int>(theApp.options.calculationMethod);
 	m_CalculateEquipotentials = (theApp.options.calculateEquipotentials ? BST_CHECKED : BST_UNCHECKED);
 	m_nrLines = theApp.options.numLinesOnUnitCharge;
 	m_nrThreads = theApp.options.numThreads;

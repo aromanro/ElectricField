@@ -43,8 +43,8 @@ void Charge::Draw(CDC* pDC, float zoom) const
 	CBrush *oldBrush = pDC->SelectObject(&brush);
 
 	CRect rect;
-	rect.top = static_cast<long>(zoom*position.Y * theApp.options.distanceUnitLength - zoom*theApp.options.chargeRadius);
-	rect.left = static_cast<long>(zoom*position.X * theApp.options.distanceUnitLength - zoom*theApp.options.chargeRadius);
+	rect.top = static_cast<long>(zoom*position.Y * theApp.options.distanceUnitLength - static_cast<long>(zoom*(double)theApp.options.chargeRadius));
+	rect.left = static_cast<long>(zoom*position.X * theApp.options.distanceUnitLength - static_cast<long>(zoom* (double)theApp.options.chargeRadius));
 	rect.right = static_cast<long>(rect.left + 2.*zoom*theApp.options.chargeRadius+2.);
 	rect.bottom = static_cast<long>(rect.top + 2.*zoom*theApp.options.chargeRadius+2.);
 

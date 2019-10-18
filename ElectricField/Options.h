@@ -3,7 +3,7 @@
 class Options
 {
 public:
-	typedef enum CalculationMethod {
+	enum class CalculationMethod {
 		EulerMethod,
 		MidpointMethod,
 		RalstonMethod,
@@ -15,7 +15,7 @@ public:
 		AdaptiveCashKarpMethod,
 		AdaptiveFehlbergMethod,
 		AdaptiveDormandPrinceMethod
-	} CalculationMethod;
+	};
 
 	// those are internal options
 
