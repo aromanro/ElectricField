@@ -78,8 +78,7 @@ protected:
 
 		FunctorForE functorE;
 		FunctorForV functorV;
-
-		FieldLineJob m_Job;
+		
 		PotentialLine fieldLine;
 
 		// some values copied from options to be easily accesible
@@ -90,13 +89,13 @@ protected:
 		unsigned int distanceUnitLength;
 
 
-		inline void CalculateElectricFieldLine();
-		inline void CalculateEquipotential();
-		inline void PostCalculateEquipotential();
+		inline void CalculateElectricFieldLine(FieldLineJob& job);
+		inline void CalculateEquipotential(FieldLineJob& job);
+		inline void PostCalculateEquipotential(FieldLineJob& job);
 
-		virtual void Calculate();
+		virtual void Calculate() override;
 
-		void ProcessJob();
+		void ProcessJob(FieldLineJob& job);
 	public:
 		CalcThread(FieldLinesCalculator* calculator, const TheElectricField *field, T *solver);
 		~CalcThread();

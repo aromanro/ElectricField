@@ -20,21 +20,21 @@ template<class T> FieldLinesCalculator::CalcThread<T>::~CalcThread()
 	delete m_Solver;
 }
 
-template<class T> inline void FieldLinesCalculator::CalcThread<T>::PostCalculateEquipotential()
+template<class T> inline void FieldLinesCalculator::CalcThread<T>::PostCalculateEquipotential(FieldLineJob& job)
 {
-	if (m_Job.angle != m_Job.angle_start || !calculateEquipotentials) return;
+	if (job.angle != job.angle_start || !calculateEquipotentials) return;
 
-	const Vector2D<double> startPoint = m_Job.point;
+	const Vector2D<double> startPoint = job.point;
 
 	const double potential = functorV.theField->Potential(startPoint);
 
-	if (sign(m_Job.charge.charge)*sign(potential) > 0 && abs(m_Job.old_potential - potential) >= potentialInterval)
+	if (sign(job.charge.charge)*sign(potential) > 0 && abs(job.old_potential - potential) >= potentialInterval)
 	{
-		if (m_Job.old_potential == 0) m_Job.old_potential = floor(potential / potentialInterval) * potentialInterval;
-		else m_Job.old_potential += sign(potential - m_Job.old_potential) * potentialInterval;
+		if (job.old_potential == 0) job.old_potential = floor(potential / potentialInterval) * potentialInterval;
+		else job.old_potential += sign(potential - job.old_potential) * potentialInterval;
 
 		std::lock_guard<std::mutex> lock(m_pCalculator->m_jobsSection);
-		FieldLineJob job(m_Job);
+		FieldLineJob job(job);
 		job.isEquipotential = true;
 		m_pCalculator->m_jobs.push_back(job);
 
@@ -48,7 +48,7 @@ template<class T> inline void FieldLinesCalculator::CalcThread<T>::PostCalculate
 	}
 }
 
-template<class T> inline void FieldLinesCalculator::CalcThread<T>::CalculateElectricFieldLine()
+template<class T> inline void FieldLinesCalculator::CalcThread<T>::CalculateElectricFieldLine(FieldLineJob& job)
 {
 	unsigned int steps = 40000;
 	
@@ -59,8 +59,8 @@ template<class T> inline void FieldLinesCalculator::CalcThread<T>::CalculateElec
 	// if the charges have different signs, the code tries to end all starting lines on some charge
 	// it might need a lot of steps for that - for net charge 0 try even more, all lines should ideally end
 
-	if (m_Job.has_different_signs && m_Job.total_charge == 0) steps = 5000000;
-	else if (m_Job.has_different_signs) steps = 1000000;
+	if (job.has_different_signs && job.total_charge == 0) steps = 5000000;
+	else if (job.has_different_signs) steps = 1000000;
 
 	double t = 0;  // this is dummy
 	double step = 0.001;
@@ -69,12 +69,12 @@ template<class T> inline void FieldLinesCalculator::CalcThread<T>::CalculateElec
 
 	// start electric field lines only from charges that have the charge with the same sign as the total charge
 	// on the other ones the lines will end (hopefully all of them if the total charge is zero)
-	if (sign(m_Job.total_charge) == sign(m_Job.charge.charge))
-		fieldLine.AddPoint(m_Job.point);
+	if (sign(job.total_charge) == sign(job.charge.charge))
+		fieldLine.AddPoint(job.point);
 		
 	for (unsigned int i = 0; i < steps; ++i)
 	{
-		const double len = m_Job.point.Length() * distanceUnitLength;
+		const double len = job.point.Length() * distanceUnitLength;
 
 		// precision is needed for parts of lines close to the charge
 		const bool needs_precision = (len < 3000);
@@ -87,14 +87,14 @@ template<class T> inline void FieldLinesCalculator::CalcThread<T>::CalculateElec
 		else step = (needs_precision ? 0.001 : 0.5);
 
 
-		m_Job.point = m_Solver->SolveStep(functorE, m_Job.point, t, step, next_step, precision, max_step);
+		job.point = m_Solver->SolveStep(functorE, job.point, t, step, next_step, precision, max_step);
 		
 		// add points only for this, the other case is for equipotentials, no need for the actual electric field line
-		if (sign(m_Job.total_charge) == sign(m_Job.charge.charge))
-			fieldLine.AddPoint(m_Job.point);
+		if (sign(job.total_charge) == sign(job.charge.charge))
+			fieldLine.AddPoint(job.point);
 
 		// line ended on a charge, bail out
-		if (functorE.theField->HitCharge(m_Job.point)) break;
+		if (functorE.theField->HitCharge(job.point)) break;
 
 		t += step;
 		if (m_Solver->IsAdaptive()) step = next_step;
@@ -103,16 +103,16 @@ template<class T> inline void FieldLinesCalculator::CalcThread<T>::CalculateElec
 		//****************************** Equipotential lines *****************************************************
 
 		// post a job for the equipotential line
-		PostCalculateEquipotential();
+		PostCalculateEquipotential(job);
 
 		//*********************************************************************************************************
 	}
 }
 
 
-template<class T> inline void FieldLinesCalculator::CalcThread<T>::CalculateEquipotential()
+template<class T> inline void FieldLinesCalculator::CalcThread<T>::CalculateEquipotential(FieldLineJob& job)
 {
-	Vector2D<double> startPoint = m_Job.point;
+	Vector2D<double> startPoint = job.point;
 	Vector2D<double> point = startPoint;
 
 	double dist = 0;
@@ -155,16 +155,17 @@ template<class T> void FieldLinesCalculator::CalcThread<T>::Calculate()
 	for (;!m_pCalculator->Terminate;)
 	{
 		// grab a job from the job list
+		FieldLineJob job;
 		{
 			std::lock_guard<std::mutex> lock(m_pCalculator->m_jobsSection);
 
 			if (m_pCalculator->Terminate || m_pCalculator->m_jobs.empty()) break; // no more jobs or asked to finish
 
-			m_Job = m_pCalculator->m_jobs.front();
+			job = m_pCalculator->m_jobs.front();
 			m_pCalculator->m_jobs.pop_front();
 		}
 		
-		ProcessJob();
+		ProcessJob(job);
 	}
 
 	FieldLinesCalculator* calc = m_pCalculator;
@@ -175,25 +176,25 @@ template<class T> void FieldLinesCalculator::CalcThread<T>::Calculate()
 }
 
 
-template<class T> void FieldLinesCalculator::CalcThread<T>::ProcessJob()
+template<class T> void FieldLinesCalculator::CalcThread<T>::ProcessJob(FieldLineJob& job)
 {
-	if (m_Job.isEquipotential) 
+	if (job.isEquipotential) 
 	{
-		CalculateEquipotential();
+		CalculateEquipotential(job);
 
 		if (m_pCalculator->Terminate) return;
 
 		std::lock_guard<std::mutex> lock(m_pCalculator->m_potentialLinesSection);
 		m_pCalculator->potentialFieldLines.push_back(PotentialLine());
-		m_pCalculator->potentialFieldLines.back().potential = m_Job.old_potential;
+		m_pCalculator->potentialFieldLines.back().potential = job.old_potential;
 		m_pCalculator->potentialFieldLines.back().weightCenter = fieldLine.weightCenter;
 		m_pCalculator->potentialFieldLines.back().points.swap(fieldLine.points);
 	}
 	else 
 	{
-		functorE.charge_sign = sign(m_Job.charge.charge);
+		functorE.charge_sign = sign(job.charge.charge);
 
-		CalculateElectricFieldLine();
+		CalculateElectricFieldLine(job);
 
 		if (m_pCalculator->Terminate) return;
 
