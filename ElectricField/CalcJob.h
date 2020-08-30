@@ -37,7 +37,7 @@ template<class T> class CalcJobWithMethod : public CalcJob
 {
 protected:
 	FieldLinesCalculator* m_pCalculator;
-	T* m_Solver;
+	T& m_Solver;
 
 	class FunctorForCalc {
 	public:
@@ -120,7 +120,7 @@ protected:
 			// precision is needed for parts of lines close to the charge
 			const bool needs_precision = (len < 3000);
 
-			if (m_Solver->IsAdaptive())
+			if (m_Solver.IsAdaptive())
 			{
 				precision = (needs_precision ? 0.001 : 0.1);
 				max_step = (needs_precision ? 0.001 : 0.1);
@@ -128,7 +128,7 @@ protected:
 			else step = (needs_precision ? 0.001 : 0.5);
 
 
-			point = m_Solver->SolveStep(functorE, point, t, step, next_step, precision, max_step);
+			point = m_Solver.SolveStep(functorE, point, t, step, next_step, precision, max_step);
 
 			// add points only for this, the other case is for equipotentials, no need for the actual electric field line
 			if (sign(total_charge) == sign(charge.charge))
@@ -138,7 +138,7 @@ protected:
 			if (functorE.theField->HitCharge(point)) break;
 
 			t += step;
-			if (m_Solver->IsAdaptive()) step = next_step;
+			if (m_Solver.IsAdaptive()) step = next_step;
 
 
 			//****************************** Equipotential lines *****************************************************
@@ -158,8 +158,8 @@ protected:
 
 		double dist = 0;
 		double t = 0;
-		const unsigned int num_steps = (m_Solver->IsAdaptive() ? 800000 : 1500000);
-		double step = (m_Solver->IsAdaptive() ? 0.001 : 0.0001);
+		const unsigned int num_steps = (m_Solver.IsAdaptive() ? 800000 : 1500000);
+		double step = (m_Solver.IsAdaptive() ? 0.001 : 0.0001);
 		double next_step = step;
 
 		fieldLine.AddPoint(startPoint);
@@ -167,7 +167,7 @@ protected:
 
 		for (unsigned int i = 0; i < num_steps; ++i)
 		{
-			curPoint = m_Solver->SolveStep(functorV, curPoint, t, step, next_step, 1E-3, 0.01);
+			curPoint = m_Solver.SolveStep(functorV, curPoint, t, step, next_step, 1E-3, 0.01);
 
 			fieldLine.AddPoint(curPoint);
 
@@ -175,7 +175,7 @@ protected:
 			fieldLine.weightCenter += curPoint * step;
 
 			t += step;
-			if (m_Solver->IsAdaptive()) step = next_step;
+			if (m_Solver.IsAdaptive()) step = next_step;
 
 			// if the distance is smaller than 6 logical units but the line length is bigger than
 			// double the distance from the start point
@@ -243,7 +243,7 @@ protected:
 		}
 	}
 public:
-	CalcJobWithMethod(const CalcJob& job, FieldLinesCalculator* calculator, const TheElectricField* field, T* solver)
+	CalcJobWithMethod(const CalcJob& job, FieldLinesCalculator* calculator, const TheElectricField* field, T& solver)
 		: CalcJob(job), m_pCalculator(calculator), m_Solver(solver),
 		functorE(field), functorV(field),
 		calculateEquipotentials(theApp.options.calculateEquipotentials), potentialInterval(theApp.options.potentialInterval), distanceUnitLength(theApp.options.distanceUnitLength)
@@ -252,7 +252,6 @@ public:
 
 	virtual ~CalcJobWithMethod()
 	{
-		delete m_Solver;
 	}
 private:
 	// prevent copy

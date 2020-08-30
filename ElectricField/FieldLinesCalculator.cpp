@@ -3,6 +3,8 @@
 
 #include "PrecisionTimer.h"
 
+#include "Singleton.h"
+
 
 const double M_PI = 3.1415926535897932384626433832795028841971693993751;
 
@@ -90,37 +92,37 @@ void FieldLinesCalculator::PostJob(const CalcJob& job)
 	switch (calcMethod)
 	{
 	case Options::CalculationMethod::EulerMethod:
-		theJob = std::make_shared<CalcJobWithMethod<RungeKutta::Euler<Vector2D<double>>>>(job, this, &field, new RungeKutta::Euler<Vector2D<double>>());
+		theJob = std::make_shared<CalcJobWithMethod<RungeKutta::Euler<Vector2D<double>>>>(job, this, &field, Singleton<RungeKutta::Euler<Vector2D<double>>>::getInstance());
 		break;
 	case Options::CalculationMethod::MidpointMethod:
-		theJob = std::make_shared<CalcJobWithMethod<RungeKutta::Midpoint<Vector2D<double>>>>(job, this, &field, new RungeKutta::Midpoint<Vector2D<double>>());
+		theJob = std::make_shared<CalcJobWithMethod<RungeKutta::Midpoint<Vector2D<double>>>>(job, this, &field, Singleton<RungeKutta::Midpoint<Vector2D<double>>>::getInstance());
 		break;
 	case Options::CalculationMethod::RalstonMethod:
-		theJob = std::make_shared<CalcJobWithMethod<RungeKutta::Ralston<Vector2D<double>>>>(job, this, &field, new RungeKutta::Ralston<Vector2D<double>>());
+		theJob = std::make_shared<CalcJobWithMethod<RungeKutta::Ralston<Vector2D<double>>>>(job, this, &field, Singleton<RungeKutta::Ralston<Vector2D<double>>>::getInstance());
 		break;
 	case Options::CalculationMethod::HeunMethod:
-		theJob = std::make_shared<CalcJobWithMethod<RungeKutta::Heun<Vector2D<double>>>>(job, this, &field, new RungeKutta::Heun<Vector2D<double>>());
+		theJob = std::make_shared<CalcJobWithMethod<RungeKutta::Heun<Vector2D<double>>>>(job, this, &field, Singleton<RungeKutta::Heun<Vector2D<double>>>::getInstance());
 		break;
 	case Options::CalculationMethod::RK4Method:
-		theJob = std::make_shared<CalcJobWithMethod<RungeKutta::RK4<Vector2D<double>>>>(job, this, &field, new RungeKutta::RK4<Vector2D<double>>());
+		theJob = std::make_shared<CalcJobWithMethod<RungeKutta::RK4<Vector2D<double>>>>(job, this, &field, Singleton<RungeKutta::RK4<Vector2D<double>>>::getInstance());
 		break;
 	case Options::CalculationMethod::RK3per8Method:
-		theJob = std::make_shared<CalcJobWithMethod<RungeKutta::RK3per8<Vector2D<double>>>>(job, this, &field, new RungeKutta::RK3per8<Vector2D<double>>());
+		theJob = std::make_shared<CalcJobWithMethod<RungeKutta::RK3per8<Vector2D<double>>>>(job, this, &field, Singleton<RungeKutta::RK3per8<Vector2D<double>>>::getInstance());
 		break;
 	case Options::CalculationMethod::AdaptiveHeunEulerMethod:
-		theJob = std::make_shared<CalcJobWithMethod<RungeKutta::AdaptiveHeunEuler<Vector2D<double>>>>(job, this, &field, new RungeKutta::AdaptiveHeunEuler<Vector2D<double>>());
+		theJob = std::make_shared<CalcJobWithMethod<RungeKutta::AdaptiveHeunEuler<Vector2D<double>>>>(job, this, &field, Singleton<RungeKutta::AdaptiveHeunEuler<Vector2D<double>>>::getInstance());
 		break;
 	case Options::CalculationMethod::AdaptiveBogackiShampineMethod:
-		theJob = std::make_shared<CalcJobWithMethod<RungeKutta::AdaptiveBogackiShampine<Vector2D<double>>>>(job, this, &field, new RungeKutta::AdaptiveBogackiShampine<Vector2D<double>>());
+		theJob = std::make_shared<CalcJobWithMethod<RungeKutta::AdaptiveBogackiShampine<Vector2D<double>>>>(job, this, &field, Singleton<RungeKutta::AdaptiveBogackiShampine<Vector2D<double>>>::getInstance());
 		break;
 	case Options::CalculationMethod::AdaptiveCashKarpMethod:
-		theJob = std::make_shared<CalcJobWithMethod<RungeKutta::AdaptiveCashKarp<Vector2D<double>>>>(job, this, &field, new RungeKutta::AdaptiveCashKarp<Vector2D<double>>());
+		theJob = std::make_shared<CalcJobWithMethod<RungeKutta::AdaptiveCashKarp<Vector2D<double>>>>(job, this, &field, Singleton<RungeKutta::AdaptiveCashKarp<Vector2D<double>>>::getInstance());
 		break;
 	case Options::CalculationMethod::AdaptiveFehlbergMethod:
-		theJob = std::make_shared<CalcJobWithMethod<RungeKutta::AdaptiveFehlberg<Vector2D<double>>>>(job, this, &field, new RungeKutta::AdaptiveFehlberg<Vector2D<double>>());
+		theJob = std::make_shared<CalcJobWithMethod<RungeKutta::AdaptiveFehlberg<Vector2D<double>>>>(job, this, &field, Singleton<RungeKutta::AdaptiveFehlberg<Vector2D<double>>>::getInstance());
 		break;
 	case Options::CalculationMethod::AdaptiveDormandPrinceMethod:
-		theJob = std::make_shared<CalcJobWithMethod<RungeKutta::AdaptiveDormandPrince<Vector2D<double>>>>(job, this, &field, new RungeKutta::AdaptiveDormandPrince<Vector2D<double>>());
+		theJob = std::make_shared<CalcJobWithMethod<RungeKutta::AdaptiveDormandPrince<Vector2D<double>>>>(job, this, &field, Singleton<RungeKutta::AdaptiveDormandPrince<Vector2D<double>>>::getInstance());
 		break;
 	}
 
