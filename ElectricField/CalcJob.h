@@ -37,7 +37,7 @@ template<class T> class CalcJobWithMethod : public CalcJob
 {
 protected:
 	FieldLinesCalculator* m_pCalculator;
-	T& m_Solver;
+	const T& m_Solver;
 
 	class FunctorForCalc {
 	public:
@@ -243,7 +243,7 @@ protected:
 		}
 	}
 public:
-	CalcJobWithMethod(const CalcJob& job, FieldLinesCalculator* calculator, const TheElectricField* field, T& solver)
+	CalcJobWithMethod(const CalcJob& job, FieldLinesCalculator* calculator, const TheElectricField* field, const T& solver)
 		: CalcJob(job), m_pCalculator(calculator), m_Solver(solver),
 		functorE(field), functorV(field),
 		calculateEquipotentials(theApp.options.calculateEquipotentials), potentialInterval(theApp.options.potentialInterval), distanceUnitLength(theApp.options.distanceUnitLength)

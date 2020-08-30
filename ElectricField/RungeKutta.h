@@ -14,13 +14,14 @@ namespace RungeKutta {
 		std::array<double, Stages> m_weights;
 		std::array<double, Stages> m_nodes;
 		std::vector<std::valarray<double>> m_coefficients;
-
-		std::array<T, Stages> K;
+		
 	public:
 		RungeKutta(const double weights[], const double nodes[], const double *coefficients[]);
 
-		template<typename Func> inline T SolveStep(Func& Function, const T& curVal, double t, double h) {
-				T thesum(0);              				
+		template<typename Func> inline T SolveStep(Func& Function, const T& curVal, double t, double h) const {
+				T thesum(0); 
+				std::array<T, Stages> K;
+
 				for (unsigned int stage = 0; stage < Stages; ++stage)
 				{                                                
 					T accum(0);                                     
@@ -34,7 +35,7 @@ namespace RungeKutta {
 				return curVal + h * thesum;
 			}
 
-		template<typename Func> inline T SolveStep(Func& Function, const T& curVal, double t, double& h, double& /*next_h*/, double /*tolerance*/, double /*max_step*/ = DBL_MAX, double /*min_step*/ = DBL_MIN) {
+		template<typename Func> inline T SolveStep(Func& Function, const T& curVal, double t, double& h, double& /*next_h*/, double /*tolerance*/, double /*max_step*/ = DBL_MAX, double /*min_step*/ = DBL_MIN) const {
 			//next_h = h;
 			return SolveStep(Function, curVal, t, h);
 		}
@@ -50,20 +51,21 @@ namespace RungeKutta {
 	public:
 		AdaptiveRungeKutta(const double weights[], const double low_order_weights[], const double nodes[], const double *coefficients[]);
 	
-		template<typename Func> inline T SolveStep(Func& Function, const T& curVal, double t, double& h, double& next_h, double tolerance, double max_step = DBL_MAX, double min_step = DBL_MIN) {
+		template<typename Func> inline T SolveStep(Func& Function, const T& curVal, double t, double& h, double& next_h, double tolerance, double max_step = DBL_MAX, double min_step = DBL_MIN) const {
 			for (unsigned int loop = 0;; ++loop) {
 
 				T thesumHigh(0), thesumLow(0);  
+				std::array<T, Stages> K;
 
 				for (unsigned int stage = 0; stage < Stages; ++stage)
 				{                                                
 					T accum(0);                                     					
-					for (unsigned int j = 0; j < stage; ++j) accum += RungeKutta<T, Stages>::m_coefficients[stage - 1][j] * RungeKutta<T, Stages>::K[j];
+					for (unsigned int j = 0; j < stage; ++j) accum += RungeKutta<T, Stages>::m_coefficients[stage - 1][j] * K[j];
 					
-					RungeKutta<T, Stages>::K[stage] = Function(t + h * RungeKutta<T, Stages>::m_nodes[stage], curVal + h * accum);
+					K[stage] = Function(t + h * RungeKutta<T, Stages>::m_nodes[stage], curVal + h * accum);
 
-					thesumHigh += RungeKutta<T, Stages>::m_weights[stage] * RungeKutta<T, Stages>::K[stage];   
-					thesumLow  += m_low_order_weights[stage] * RungeKutta<T, Stages>::K[stage];  
+					thesumHigh += RungeKutta<T, Stages>::m_weights[stage] * K[stage];   
+					thesumLow  += m_low_order_weights[stage] * K[stage];  
 				}
 
 				const double error = abs((thesumHigh - thesumLow) * h);

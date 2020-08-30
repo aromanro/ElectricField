@@ -18,8 +18,7 @@ protected:
 
 	double potentialInterval;
 public:
-	unsigned int postedJobs;
-
+	std::atomic_uint postedJobs;
 	std::atomic_uint finishedJobs;
 
 
