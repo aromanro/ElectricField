@@ -98,6 +98,9 @@ BOOL CElectricFieldApp::InitInstance()
 
 	options.Load();
 
+
+	m_WorkerThreads.Resize(options.numThreads);
+
 	InitContextMenuManager();
 
 	InitKeyboardManager();
@@ -289,4 +292,10 @@ BOOL CElectricFieldApp::OnIdle(LONG lCount)
 		else ++it;
 
 	return CWinAppEx::OnIdle(lCount);
+}
+
+
+void CElectricFieldApp::ChangeNumberOfThreads()
+{
+	m_WorkerThreads.Resize(options.numThreads);
 }

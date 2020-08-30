@@ -6,208 +6,9 @@
 
 const double M_PI = 3.1415926535897932384626433832795028841971693993751;
 
-template<class T> FieldLinesCalculator::CalcThread<T>::CalcThread(FieldLinesCalculator* calculator, const TheElectricField *field, T *solver)
-	: m_pCalculator(calculator), m_Solver(solver),
-	functorE(field), functorV(field),
-	calculateEquipotentials(theApp.options.calculateEquipotentials), potentialInterval(theApp.options.potentialInterval), distanceUnitLength(theApp.options.distanceUnitLength)
-{
-	Start();
-}
-
-
-template<class T> FieldLinesCalculator::CalcThread<T>::~CalcThread()
-{
-	delete m_Solver;
-}
-
-template<class T> inline void FieldLinesCalculator::CalcThread<T>::PostCalculateEquipotential(FieldLineJob& job)
-{
-	if (job.angle != job.angle_start || !calculateEquipotentials) return;
-
-	const Vector2D<double> startPoint = job.point;
-
-	const double potential = functorV.theField->Potential(startPoint);
-
-	if (sign(job.charge.charge)*sign(potential) > 0 && abs(job.old_potential - potential) >= potentialInterval)
-	{
-		if (job.old_potential == 0) job.old_potential = floor(potential / potentialInterval) * potentialInterval;
-		else job.old_potential += sign(potential - job.old_potential) * potentialInterval;
-
-		std::lock_guard<std::mutex> lock(m_pCalculator->m_jobsSection);
-		FieldLineJob job(job);
-		job.isEquipotential = true;
-		m_pCalculator->m_jobs.push_back(job);
-
-		// some threads finished although there are still jobs posted
-		// restart one
-		if (m_pCalculator->finishedThreads > 0)
-		{
-			--m_pCalculator->finishedThreads;
-			m_pCalculator->StartComputingThread(&m_pCalculator->field);
-		}
-	}
-}
-
-template<class T> inline void FieldLinesCalculator::CalcThread<T>::CalculateElectricFieldLine(FieldLineJob& job)
-{
-	unsigned int steps = 40000;
-	
-	//dummy values
-	double precision = 0.01;
-	double max_step = 0.1;
-	
-	// if the charges have different signs, the code tries to end all starting lines on some charge
-	// it might need a lot of steps for that - for net charge 0 try even more, all lines should ideally end
-
-	if (job.has_different_signs && job.total_charge == 0) steps = 5000000;
-	else if (job.has_different_signs) steps = 1000000;
-
-	double t = 0;  // this is dummy
-	double step = 0.001;
-	double next_step = step;
-
-
-	// start electric field lines only from charges that have the charge with the same sign as the total charge
-	// on the other ones the lines will end (hopefully all of them if the total charge is zero)
-	if (sign(job.total_charge) == sign(job.charge.charge))
-		fieldLine.AddPoint(job.point);
-		
-	for (unsigned int i = 0; i < steps; ++i)
-	{
-		const double len = job.point.Length() * distanceUnitLength;
-
-		// precision is needed for parts of lines close to the charge
-		const bool needs_precision = (len < 3000);
-
-		if (m_Solver->IsAdaptive())
-		{
-			precision = (needs_precision ? 0.001 : 0.1);
-			max_step = (needs_precision ? 0.001 : 0.1);
-		}
-		else step = (needs_precision ? 0.001 : 0.5);
-
-
-		job.point = m_Solver->SolveStep(functorE, job.point, t, step, next_step, precision, max_step);
-		
-		// add points only for this, the other case is for equipotentials, no need for the actual electric field line
-		if (sign(job.total_charge) == sign(job.charge.charge))
-			fieldLine.AddPoint(job.point);
-
-		// line ended on a charge, bail out
-		if (functorE.theField->HitCharge(job.point)) break;
-
-		t += step;
-		if (m_Solver->IsAdaptive()) step = next_step;
-
-
-		//****************************** Equipotential lines *****************************************************
-
-		// post a job for the equipotential line
-		PostCalculateEquipotential(job);
-
-		//*********************************************************************************************************
-	}
-}
-
-
-template<class T> inline void FieldLinesCalculator::CalcThread<T>::CalculateEquipotential(FieldLineJob& job)
-{
-	Vector2D<double> startPoint = job.point;
-	Vector2D<double> point = startPoint;
-
-	double dist = 0;
-	double t = 0;
-	const unsigned int num_steps = (m_Solver->IsAdaptive() ? 800000 : 1500000);
-	double step = (m_Solver->IsAdaptive() ? 0.001 : 0.0001);
-	double next_step = step;
-
-	fieldLine.AddPoint(startPoint);
-	fieldLine.weightCenter = Vector2D<double>(startPoint);
-	
-	for (unsigned int i = 0; i < num_steps; ++i)
-	{
-		point = m_Solver->SolveStep(functorV, point, t, step, next_step, 1E-3, 0.01);
-
-		fieldLine.AddPoint(point);
-		
-		// 'step' plays the role of the portion of the curve 'weight'
-		fieldLine.weightCenter += point * step;
-
-		t += step;
-		if (m_Solver->IsAdaptive()) step = next_step;
-
-		// if the distance is smaller than 6 logical units but the line length is bigger than
-		// double the distance from the start point
-		// the code assumes that the field line closes
-		dist = (startPoint - point).Length();
-		if (dist * distanceUnitLength < 6. && t > 2.*dist)
-		{
-			fieldLine.points.push_back(startPoint);  // close the loop
-			fieldLine.weightCenter /= t; // divide by the whole 'weight' of the curve
-			break;
-		}
-	}
-}
-
-
-template<class T> void FieldLinesCalculator::CalcThread<T>::Calculate()
-{
-	for (;!m_pCalculator->Terminate;)
-	{
-		// grab a job from the job list
-		FieldLineJob job;
-		{
-			std::lock_guard<std::mutex> lock(m_pCalculator->m_jobsSection);
-
-			if (m_pCalculator->Terminate || m_pCalculator->m_jobs.empty()) break; // no more jobs or asked to finish
-
-			job = m_pCalculator->m_jobs.front();
-			m_pCalculator->m_jobs.pop_front();
-		}
-		
-		ProcessJob(job);
-	}
-
-	FieldLinesCalculator* calc = m_pCalculator;
-
-	delete this;
-
-	++calc->finishedThreads;
-}
-
-
-template<class T> void FieldLinesCalculator::CalcThread<T>::ProcessJob(FieldLineJob& job)
-{
-	if (job.isEquipotential) 
-	{
-		CalculateEquipotential(job);
-
-		if (m_pCalculator->Terminate) return;
-
-		std::lock_guard<std::mutex> lock(m_pCalculator->m_potentialLinesSection);
-		m_pCalculator->potentialFieldLines.push_back(PotentialLine());
-		m_pCalculator->potentialFieldLines.back().potential = job.old_potential;
-		m_pCalculator->potentialFieldLines.back().weightCenter = fieldLine.weightCenter;
-		m_pCalculator->potentialFieldLines.back().points.swap(fieldLine.points);
-	}
-	else 
-	{
-		functorE.charge_sign = sign(job.charge.charge);
-
-		CalculateElectricFieldLine(job);
-
-		if (m_pCalculator->Terminate) return;
-
-		std::lock_guard<std::mutex> lock(m_pCalculator->m_electricLinesSection);
-		m_pCalculator->electricFieldLines.push_back(FieldLine());
-		m_pCalculator->electricFieldLines.back().points.swap(fieldLine.points);
-	}
-}
-
-
 
 FieldLinesCalculator::FieldLinesCalculator()
-	: startedThreads(0), finishedThreads(0), potentialInterval(0), Terminate(false), calcMethod(Options::CalculationMethod::EulerMethod)
+	: postedJobs(0), finishedJobs(0), potentialInterval(0), Terminate(false), calcMethod(Options::CalculationMethod::EulerMethod)
 {
 }
 
@@ -225,6 +26,9 @@ void FieldLinesCalculator::StartCalculating(const TheElectricField *theField)
 	Clear();
 
 	if (NULL == theField) return;
+
+	potentialInterval = theApp.options.potentialInterval;
+	calcMethod = theApp.options.calculationMethod;
 
 	bool has_different_signs;
 	const int total_charge = theField->GetTotalCharge(has_different_signs);
@@ -247,15 +51,11 @@ void FieldLinesCalculator::StartCalculating(const TheElectricField *theField)
 			point.X = charge.position.X + r*cos(angle);
 			point.Y = charge.position.Y + r*sin(angle);
 
-			m_jobs.push_back( { charge, total_charge, has_different_signs, angle, angle_start, point, false, 0 } );
+			CalcJob job{{ charge, total_charge, has_different_signs, angle, angle_start, point, false, 0 }};
+			
+			PostJob(job);
 		}
 	}
-
-	potentialInterval = theApp.options.potentialInterval;
-	calcMethod = theApp.options.calculationMethod;
-
-	startedThreads = theApp.options.numThreads;
-	for (unsigned int i = 0; i < startedThreads; ++i) StartComputingThread(theField);
 }
 
 int FieldLinesCalculator::GetNumberOfElectricFieldLines(const TheElectricField* field, int total_charge)
@@ -276,48 +76,57 @@ int FieldLinesCalculator::GetNumberOfElectricFieldLines(const TheElectricField* 
 
 bool FieldLinesCalculator::CheckStatus()
 {
-	if (finishedThreads < startedThreads) return false;
+	if (finishedJobs < postedJobs) return false;
 
 	return true;
 }
 
 
-void FieldLinesCalculator::StartComputingThread(const TheElectricField *theField)
+
+void FieldLinesCalculator::PostJob(const CalcJob& job)
 {
+	std::shared_ptr<CalcJob> theJob;
+
 	switch (calcMethod)
 	{
 	case Options::CalculationMethod::EulerMethod:
-		new CalcThread<RungeKutta::Euler<Vector2D<double>>>(this, theField, new RungeKutta::Euler<Vector2D<double>>());
+		theJob = std::make_shared<CalcJobWithMethod<RungeKutta::Euler<Vector2D<double>>>>(job, this, &field, new RungeKutta::Euler<Vector2D<double>>());
 		break;
 	case Options::CalculationMethod::MidpointMethod:
-		new CalcThread<RungeKutta::Midpoint<Vector2D<double>>>(this, theField, new RungeKutta::Midpoint<Vector2D<double>>());
+		theJob = std::make_shared<CalcJobWithMethod<RungeKutta::Midpoint<Vector2D<double>>>>(job, this, &field, new RungeKutta::Midpoint<Vector2D<double>>());
 		break;
 	case Options::CalculationMethod::RalstonMethod:
-		new CalcThread<RungeKutta::Ralston<Vector2D<double>>>(this, theField, new RungeKutta::Ralston<Vector2D<double>>());
+		theJob = std::make_shared<CalcJobWithMethod<RungeKutta::Ralston<Vector2D<double>>>>(job, this, &field, new RungeKutta::Ralston<Vector2D<double>>());
 		break;
 	case Options::CalculationMethod::HeunMethod:
-		new CalcThread<RungeKutta::Heun<Vector2D<double>>>(this, theField, new RungeKutta::Heun<Vector2D<double>>());
+		theJob = std::make_shared<CalcJobWithMethod<RungeKutta::Heun<Vector2D<double>>>>(job, this, &field, new RungeKutta::Heun<Vector2D<double>>());
 		break;
 	case Options::CalculationMethod::RK4Method:
-		new CalcThread<RungeKutta::RK4<Vector2D<double>>>(this, theField, new RungeKutta::RK4<Vector2D<double>>());
+		theJob = std::make_shared<CalcJobWithMethod<RungeKutta::RK4<Vector2D<double>>>>(job, this, &field, new RungeKutta::RK4<Vector2D<double>>());
 		break;
 	case Options::CalculationMethod::RK3per8Method:
-		new CalcThread<RungeKutta::RK3per8<Vector2D<double>>>(this, theField, new RungeKutta::RK3per8<Vector2D<double>>());
+		theJob = std::make_shared<CalcJobWithMethod<RungeKutta::RK3per8<Vector2D<double>>>>(job, this, &field, new RungeKutta::RK3per8<Vector2D<double>>());
 		break;
 	case Options::CalculationMethod::AdaptiveHeunEulerMethod:
-		new CalcThread<RungeKutta::AdaptiveHeunEuler<Vector2D<double>>>(this, theField, new RungeKutta::AdaptiveHeunEuler<Vector2D<double>>());
+		theJob = std::make_shared<CalcJobWithMethod<RungeKutta::AdaptiveHeunEuler<Vector2D<double>>>>(job, this, &field, new RungeKutta::AdaptiveHeunEuler<Vector2D<double>>());
 		break;
 	case Options::CalculationMethod::AdaptiveBogackiShampineMethod:
-		new CalcThread<RungeKutta::AdaptiveBogackiShampine<Vector2D<double>>>(this, theField, new RungeKutta::AdaptiveBogackiShampine<Vector2D<double>>());
+		theJob = std::make_shared<CalcJobWithMethod<RungeKutta::AdaptiveBogackiShampine<Vector2D<double>>>>(job, this, &field, new RungeKutta::AdaptiveBogackiShampine<Vector2D<double>>());
 		break;
 	case Options::CalculationMethod::AdaptiveCashKarpMethod:
-		new CalcThread<RungeKutta::AdaptiveCashKarp<Vector2D<double>>>(this, theField, new RungeKutta::AdaptiveCashKarp<Vector2D<double>>());
+		theJob = std::make_shared<CalcJobWithMethod<RungeKutta::AdaptiveCashKarp<Vector2D<double>>>>(job, this, &field, new RungeKutta::AdaptiveCashKarp<Vector2D<double>>());
 		break;
 	case Options::CalculationMethod::AdaptiveFehlbergMethod:
-		new CalcThread<RungeKutta::AdaptiveFehlberg<Vector2D<double>>>(this, theField, new RungeKutta::AdaptiveFehlberg<Vector2D<double>>());
+		theJob = std::make_shared<CalcJobWithMethod<RungeKutta::AdaptiveFehlberg<Vector2D<double>>>>(job, this, &field, new RungeKutta::AdaptiveFehlberg<Vector2D<double>>());
 		break;
 	case Options::CalculationMethod::AdaptiveDormandPrinceMethod:
-		new CalcThread<RungeKutta::AdaptiveDormandPrince<Vector2D<double>>>(this, theField, new RungeKutta::AdaptiveDormandPrince<Vector2D<double>>());
+		theJob = std::make_shared<CalcJobWithMethod<RungeKutta::AdaptiveDormandPrince<Vector2D<double>>>>(job, this, &field, new RungeKutta::AdaptiveDormandPrince<Vector2D<double>>());
 		break;
+	}
+
+	if (theJob)
+	{
+		++postedJobs;
+		theApp.m_WorkerThreads.AddJob(theJob);
 	}
 }

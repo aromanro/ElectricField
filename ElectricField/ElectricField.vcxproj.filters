@@ -78,7 +78,13 @@
     <ClInclude Include="DrawPropertyPage.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ComputationThread.h">
+    <ClInclude Include="WorkerThread.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="WorkerThreadsPool.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CalcJob.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -132,9 +138,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="DrawPropertyPage.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ComputationThread.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="RungeKutta.inl">

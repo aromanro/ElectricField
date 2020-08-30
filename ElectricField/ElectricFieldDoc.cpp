@@ -143,10 +143,11 @@ bool CElectricFieldDoc::GetData()
 	GetDataFromThreads();
 
 	std::thread thread1 = std::thread([calc = calculator] {	for (auto& line : calc->field.electricFieldLines) line.AdjustForBezier(); });
-	std::thread thread2 = std::thread([calc = calculator] {	for (auto& line : calc->field.potentialFieldLines) line.AdjustForBezier(); });
+
+	// no need to spawn another thread for this then wait for it
+	for (auto& line : calculator->field.potentialFieldLines) line.AdjustForBezier();
 
 	thread1.join();
-	thread2.join();
 
 	return true;
 }

@@ -13,16 +13,16 @@
 
 #pragma comment (lib, "d2d1.lib")
 
-
 #include "Options.h"
+#include "WorkerThreadsPool.h"
 
-#include <vector>
 
 // CElectricFieldApp:
 // See ElectricField.cpp for the implementation of this class
 //
 
 class FieldLinesCalculator;
+class CalcJob;
 
 class CElectricFieldApp : public CWinAppEx
 {
@@ -35,6 +35,8 @@ public:
 	virtual BOOL InitInstance();
 	virtual int ExitInstance();
 
+	void ChangeNumberOfThreads();
+
 // Implementation
 	UINT  m_nAppLook;
 	BOOL  m_bHiColorIcons;
@@ -43,6 +45,8 @@ public:
 
 	// here stay the ones that are not finished before closing the document
 	std::vector<FieldLinesCalculator*> calculators;
+
+	WorkerThreadsPool<std::shared_ptr<CalcJob>> m_WorkerThreads;
 
 	afx_msg void OnAppAbout();
 	DECLARE_MESSAGE_MAP()

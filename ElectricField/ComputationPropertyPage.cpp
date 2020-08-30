@@ -77,6 +77,8 @@ void ComputationPropertyPage::ApplyValues()
 
 	theApp.options.potentialInterval = static_cast<double>(m_Slider.GetPos())/1000.;
 
+	theApp.ChangeNumberOfThreads();
+
 	theApp.options.Save();
 }
 

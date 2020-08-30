@@ -15,7 +15,20 @@ public:
 	Vector2D<double> position;
 
 	Charge(int value = 1);
+	Charge(const Charge& c)
+		: charge(c.charge), position(c.position)
+	{
+	}
+
 	~Charge();
+
+	Charge& operator=(const Charge& c)
+	{
+		charge = c.charge;
+		position = c.position;
+
+		return *this;
+	}
 	
 	void Draw(CHwndRenderTarget* renderTarget, CRect& rect) const;
 	void Draw(CDC* pDC, float zoom) const;

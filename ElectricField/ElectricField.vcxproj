@@ -199,10 +199,10 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CalcJob.h" />
     <ClInclude Include="Charge.h" />
     <ClInclude Include="ChildFrm.h" />
     <ClInclude Include="ComputationPropertyPage.h" />
-    <ClInclude Include="ComputationThread.h" />
     <ClInclude Include="ConfigDocs.h" />
     <ClInclude Include="DrawPropertyPage.h" />
     <ClInclude Include="ElectricField.h" />
@@ -220,12 +220,13 @@
     <ClInclude Include="targetver.h" />
     <ClInclude Include="TheElectricField.h" />
     <ClInclude Include="Vector2D.h" />
+    <ClInclude Include="WorkerThread.h" />
+    <ClInclude Include="WorkerThreadsPool.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Charge.cpp" />
     <ClCompile Include="ChildFrm.cpp" />
     <ClCompile Include="ComputationPropertyPage.cpp" />
-    <ClCompile Include="ComputationThread.cpp" />
     <ClCompile Include="ConfigDocs.cpp" />
     <ClCompile Include="DrawPropertyPage.cpp" />
     <ClCompile Include="ElectricField.cpp" />

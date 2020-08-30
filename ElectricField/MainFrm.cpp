@@ -373,5 +373,6 @@ void CMainFrame::OnViewOptions()
 	sheet->AddPage(&page2);
 
 	sheet->DoModal();
+
 	delete sheet;
 }
