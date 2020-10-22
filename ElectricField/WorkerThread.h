@@ -65,13 +65,8 @@ protected:
             std::unique_lock<std::mutex> lock(m_ThreadsPool->m_Mutex);
             m_ThreadsPool->m_Condition.wait(lock, [this] { return TerminateWait(); });
 
-            if (m_Stop) break;
-
-            do
+            while (!m_ThreadsPool->m_JobsQueue.empty() && !m_Stop)
             {
-                if (m_ThreadsPool->m_JobsQueue.empty())
-                    break;
-
                 Job job = m_ThreadsPool->m_JobsQueue.front();
                 m_ThreadsPool->m_JobsQueue.pop();
                 lock.unlock();
@@ -79,7 +74,9 @@ protected:
                 job->Calculate();
 
                 lock.lock();
-            } while (!m_ThreadsPool->m_JobsQueue.empty() && !m_Stop);
+            } 
+
+            if (m_Stop) break;
 
             lock.unlock();
         } while (true);
