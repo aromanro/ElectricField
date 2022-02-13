@@ -11,11 +11,7 @@ public:
 	CChildFrame();
 
 // Attributes
-public:
-
 // Operations
-public:
-
 // Overrides
 	virtual BOOL PreCreateWindow(CREATESTRUCT& cs);
 

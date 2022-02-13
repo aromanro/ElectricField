@@ -199,7 +199,6 @@ BOOL CMainFrame::CreateDockingWindows()
 
 void CMainFrame::SetDockingWindowIcons(BOOL /*bHiColorIcons*/)
 {
-
 	UpdateMDITabbedBarsIcons();
 }
 

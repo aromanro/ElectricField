@@ -62,7 +62,6 @@ protected:
 
 	class FunctorForV : public FunctorForCalc {
 	public:
-
 		FunctorForV(const TheElectricField* field = NULL) : FunctorForCalc(field) {};
 
 		// just returns a perpendicular vector on E
@@ -209,7 +208,7 @@ protected:
 		}
 	}
 
-	virtual void Calculate() override
+	void Calculate() override
 	{
 		ProcessJob();
 		++m_pCalculator->finishedJobs;

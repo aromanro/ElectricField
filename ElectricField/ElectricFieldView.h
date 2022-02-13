@@ -16,10 +16,7 @@ public:
 	CElectricFieldDoc* GetDocument() const;
 
 // Operations
-public:
-
 // Overrides
-public:
 	virtual void OnDraw(CDC* pDC);  // overridden to draw this view
 	virtual BOOL PreCreateWindow(CREATESTRUCT& cs);
 protected:
@@ -43,6 +40,7 @@ protected:
 	afx_msg void OnFilePrintPreview();
 
 	DECLARE_MESSAGE_MAP()
+
 public:
 	afx_msg LRESULT OnDrawWithD2D(WPARAM wParam, LPARAM lParam);
 	afx_msg BOOL OnEraseBkgnd(CDC* pDC);

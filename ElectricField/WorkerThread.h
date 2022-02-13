@@ -52,7 +52,6 @@ public:
     }
 
 protected:
-
     inline bool TerminateWait() const
     {
         return m_ThreadsPool->HasWork() || m_Stop;

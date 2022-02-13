@@ -84,7 +84,6 @@ void DrawPropertyPage::ApplyValues()
 			if (pDoc) pDoc->UpdateAllViews(NULL);
 		}
 	}
-
 }
 
 

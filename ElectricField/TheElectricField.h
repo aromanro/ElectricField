@@ -7,8 +7,6 @@
 
 class TheElectricField
 {
-protected:
-
 public:
 	std::vector<Charge> charges;
 	

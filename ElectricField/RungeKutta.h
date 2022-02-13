@@ -48,15 +48,14 @@ namespace RungeKutta {
 	template<typename T, unsigned int Stages, unsigned int Order> class AdaptiveRungeKutta : public RungeKutta<T, Stages> {
 	protected:
 		std::array<double, Stages> m_low_order_weights;
+
 	public:
 		AdaptiveRungeKutta(const double weights[], const double low_order_weights[], const double nodes[], const double *coefficients[]);
 	
-		template<typename Func> inline T SolveStep(Func& Function, const T& curVal, double t, double& h, double& next_h, double tolerance, double max_step = DBL_MAX, double min_step = DBL_MIN) const {
-			
+		template<typename Func> inline T SolveStep(Func& Function, const T& curVal, double t, double& h, double& next_h, double tolerance, double max_step = DBL_MAX, double min_step = DBL_MIN) const {			
 			std::array<T, Stages> K;			
 			
 			for (unsigned int loop = 0;; ++loop) {
-
 				T thesumHigh(0), thesumLow(0);  
 
 				for (unsigned int stage = 0; stage < Stages; ++stage)

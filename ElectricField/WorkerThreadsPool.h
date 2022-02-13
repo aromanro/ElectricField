@@ -11,7 +11,6 @@ template <class Job> class WorkerThreadsPool
 	typedef WorkerThread<WorkerThreadsPool<Job>, Job> JobWorkerThread;
 	friend class JobWorkerThread;
 public:
-
 	WorkerThreadsPool(int nrThreads = 4)		
 	{
 		if (nrThreads <= 0) nrThreads = 1;
