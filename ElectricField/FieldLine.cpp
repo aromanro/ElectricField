@@ -32,7 +32,7 @@ void FieldLine::DrawPoints(ID2D1GeometrySink* sink, const CRect& irect, bool isP
 
 	sink->SetFillMode(D2D1_FILL_MODE_WINDING);
 
-	D2D1_POINT_2F pt1, pt2, pt3;
+	D2D1_POINT_2F pt1, pt2;
 	pt1.x = pt1.y = pt2.x = pt2.y = 0;
 
 	bool morePoints = false;
@@ -40,6 +40,32 @@ void FieldLine::DrawPoints(ID2D1GeometrySink* sink, const CRect& irect, bool isP
 
 	bool opened = false;
 	bool broken = false;
+
+	AddPoints(sink, irect, pt1, pt2, opened, broken, morePoints, pt2Valid);
+
+	if (morePoints)
+	{
+		sink->AddLine(pt1);
+		if (pt2Valid) sink->AddLine(pt2);
+	}
+
+	if (opened)
+	{
+		if (isPotential && points.front() == points.back() && !broken) sink->EndFigure(D2D1_FIGURE_END_CLOSED);
+		else sink->EndFigure(D2D1_FIGURE_END_OPEN);
+	}
+
+	sink->Close();
+	sink->Release();
+
+	CD2DSolidColorBrush* pBrush = new CD2DSolidColorBrush(renderTarget, isPotential ? theApp.options.potentialFieldLineColor : theApp.options.electricFieldLineColor);
+	renderTarget->DrawGeometry(&geometry, pBrush, static_cast<float>(isPotential ? theApp.options.potentialFieldLineThickness : theApp.options.electricFieldLineThickness));
+	delete pBrush;
+}
+
+void FieldLine::AddPoints(ID2D1GeometrySink* sink, const CRect& irect, D2D1_POINT_2F& pt1, D2D1_POINT_2F& pt2, bool& opened, bool& broken, bool& morePoints, bool& pt2Valid) const
+{
+	D2D1_POINT_2F pt3;
 
 	for (auto it = points.begin(); it != points.end(); ++it)
 	{
@@ -84,29 +110,6 @@ void FieldLine::DrawPoints(ID2D1GeometrySink* sink, const CRect& irect, bool isP
 
 		sink->AddBezier(D2D1::BezierSegment(pt1, pt2, pt3));
 	}
-
-
-	if (morePoints)
-	{
-		sink->AddLine(pt1);
-		if (pt2Valid) sink->AddLine(pt2);
-	}
-
-
-	if (opened)
-	{
-		if (isPotential && points.front() == points.back() && !broken) sink->EndFigure(D2D1_FIGURE_END_CLOSED);
-		else sink->EndFigure(D2D1_FIGURE_END_OPEN);
-	}
-
-	sink->Close();
-	sink->Release();
-
-	CD2DSolidColorBrush* pBrush = new CD2DSolidColorBrush(renderTarget, isPotential ? theApp.options.potentialFieldLineColor : theApp.options.electricFieldLineColor);
-
-	renderTarget->DrawGeometry(&geometry, pBrush, static_cast<float>(isPotential ? theApp.options.potentialFieldLineThickness : theApp.options.electricFieldLineThickness));
-
-	delete pBrush;
 }
 
 
