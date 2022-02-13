@@ -32,6 +32,7 @@ public:
 	void Draw(CDC* pDC, float zoom) const;
 private:
 	void DrawBezierAndLine(CDC* pDC, std::vector<CPoint>& gdiPoints) const;
+	void DrawPoints(ID2D1GeometrySink* sink, const CRect& irect, bool isPotential, CHwndRenderTarget* renderTarget, CD2DPathGeometry& geometry) const;
 protected:
 	static void AdjustForBezier(const Vector2D<double>& pt0, const Vector2D<double>& pt1, const Vector2D<double>& pt2, const Vector2D<double>& pt3, double& Xo1, double& Yo1, double& Xo2, double& Yo2);
 public:

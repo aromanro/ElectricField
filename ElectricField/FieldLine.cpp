@@ -22,88 +22,92 @@ void FieldLine::Draw(CHwndRenderTarget* renderTarget, const CRect& rect, bool is
 	geometry.Create(renderTarget);
 	
 	ID2D1GeometrySink* sink = geometry.Open();
-	if (sink)
-	{
-		sink->SetFillMode(D2D1_FILL_MODE_WINDING);
 
-		D2D1_POINT_2F pt1, pt2, pt3;
-		pt1.x = pt1.y = pt2.x = pt2.y = 0;
-		
-		bool morePoints = false;
-		bool pt2Valid = false;
-
-		bool opened = false;
-		bool broken = false;
-		
-		for (auto it = points.begin(); it != points.end(); ++it)
-		{
-			pt1.x = static_cast<float>(theApp.options.distanceUnitLength * it->X);
-			pt1.y = static_cast<float>(theApp.options.distanceUnitLength * it->Y);
-
-			if (irect.PtInRect(CPoint(static_cast<int>(pt1.x), static_cast<int>(pt1.y))))
-			{
-				if (!opened)
-				{
-					opened = true;
-					sink->BeginFigure(pt1, D2D1_FIGURE_BEGIN_FILLED);
-					continue;
-				}
-			}
-			else
-			{
-				if (opened) {
-					opened = false;
-					sink->EndFigure(D2D1_FIGURE_END_OPEN);
-				}
-				broken = true;
-				continue;
-			}
-
-			if (++it == points.end()) {
-				morePoints = true;
-				break;
-			}
-
-			pt2.x = static_cast<float>(theApp.options.distanceUnitLength * it->X);
-			pt2.y = static_cast<float>(theApp.options.distanceUnitLength * it->Y);
-
-			if (++it == points.end()) {
-				morePoints = true;
-				pt2Valid = true;
-				break;
-			}
-
-			pt3.x = static_cast<float>(theApp.options.distanceUnitLength * it->X);
-			pt3.y = static_cast<float>(theApp.options.distanceUnitLength * it->Y);
-
-			sink->AddBezier(D2D1::BezierSegment(pt1, pt2, pt3));
-		}
-
-		
-		if (morePoints)
-		{
-			sink->AddLine(pt1);
-			if (pt2Valid) sink->AddLine(pt2);
-		}
-		
-
-		if (opened)
-		{
-			if (isPotential && points.front() == points.back() && !broken) sink->EndFigure(D2D1_FIGURE_END_CLOSED);
-			else sink->EndFigure(D2D1_FIGURE_END_OPEN);
-		}
-
-		sink->Close();
-		sink->Release();
-
-		CD2DSolidColorBrush *pBrush = new CD2DSolidColorBrush(renderTarget, isPotential ? theApp.options.potentialFieldLineColor : theApp.options.electricFieldLineColor);
-
-		renderTarget->DrawGeometry(&geometry, pBrush, static_cast<float>(isPotential ? theApp.options.potentialFieldLineThickness : theApp.options.electricFieldLineThickness));
-
-		delete pBrush;
-	}
+	DrawPoints(sink, irect, isPotential, renderTarget, geometry);
 }
 
+void FieldLine::DrawPoints(ID2D1GeometrySink* sink, const CRect& irect, bool isPotential, CHwndRenderTarget* renderTarget, CD2DPathGeometry& geometry) const
+{
+	if (!sink) return;
+
+	sink->SetFillMode(D2D1_FILL_MODE_WINDING);
+
+	D2D1_POINT_2F pt1, pt2, pt3;
+	pt1.x = pt1.y = pt2.x = pt2.y = 0;
+
+	bool morePoints = false;
+	bool pt2Valid = false;
+
+	bool opened = false;
+	bool broken = false;
+
+	for (auto it = points.begin(); it != points.end(); ++it)
+	{
+		pt1.x = static_cast<float>(theApp.options.distanceUnitLength * it->X);
+		pt1.y = static_cast<float>(theApp.options.distanceUnitLength * it->Y);
+
+		if (irect.PtInRect(CPoint(static_cast<int>(pt1.x), static_cast<int>(pt1.y))))
+		{
+			if (!opened)
+			{
+				opened = true;
+				sink->BeginFigure(pt1, D2D1_FIGURE_BEGIN_FILLED);
+				continue;
+			}
+		}
+		else
+		{
+			if (opened) {
+				opened = false;
+				sink->EndFigure(D2D1_FIGURE_END_OPEN);
+			}
+			broken = true;
+			continue;
+		}
+
+		if (++it == points.end()) {
+			morePoints = true;
+			break;
+		}
+
+		pt2.x = static_cast<float>(theApp.options.distanceUnitLength * it->X);
+		pt2.y = static_cast<float>(theApp.options.distanceUnitLength * it->Y);
+
+		if (++it == points.end()) {
+			morePoints = true;
+			pt2Valid = true;
+			break;
+		}
+
+		pt3.x = static_cast<float>(theApp.options.distanceUnitLength * it->X);
+		pt3.y = static_cast<float>(theApp.options.distanceUnitLength * it->Y);
+
+		sink->AddBezier(D2D1::BezierSegment(pt1, pt2, pt3));
+	}
+
+
+	if (morePoints)
+	{
+		sink->AddLine(pt1);
+		if (pt2Valid) sink->AddLine(pt2);
+	}
+
+
+	if (opened)
+	{
+		if (isPotential && points.front() == points.back() && !broken) sink->EndFigure(D2D1_FIGURE_END_CLOSED);
+		else sink->EndFigure(D2D1_FIGURE_END_OPEN);
+	}
+
+	sink->Close();
+	sink->Release();
+
+	CD2DSolidColorBrush* pBrush = new CD2DSolidColorBrush(renderTarget, isPotential ? theApp.options.potentialFieldLineColor : theApp.options.electricFieldLineColor);
+
+	renderTarget->DrawGeometry(&geometry, pBrush, static_cast<float>(isPotential ? theApp.options.potentialFieldLineThickness : theApp.options.electricFieldLineThickness));
+
+	delete pBrush;
+}
 
 
 
