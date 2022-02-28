@@ -4,7 +4,7 @@ class Options
 {
 public:
 	enum class CalculationMethod {
-		EulerMethod,
+		EulerMethod = 0,
 		MidpointMethod,
 		RalstonMethod,
 		HeunMethod,

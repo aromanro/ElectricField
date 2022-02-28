@@ -32,8 +32,7 @@ void FieldLine::DrawPoints(ID2D1GeometrySink* sink, const CRect& irect, bool isP
 
 	sink->SetFillMode(D2D1_FILL_MODE_WINDING);
 
-	D2D1_POINT_2F pt1, pt2;
-	pt1.x = pt1.y = pt2.x = pt2.y = 0;
+	D2D1_POINT_2F pt1{ 0, 0 }, pt2{ 0, 0 };
 
 	bool morePoints = false;
 	bool pt2Valid = false;
@@ -65,8 +64,6 @@ void FieldLine::DrawPoints(ID2D1GeometrySink* sink, const CRect& irect, bool isP
 
 void FieldLine::AddPoints(ID2D1GeometrySink* sink, const CRect& irect, D2D1_POINT_2F& pt1, D2D1_POINT_2F& pt2, bool& opened, bool& broken, bool& morePoints, bool& pt2Valid) const
 {
-	D2D1_POINT_2F pt3;
-
 	for (auto it = points.begin(); it != points.end(); ++it)
 	{
 		pt1.x = static_cast<float>(theApp.options.distanceUnitLength * it->X);
@@ -105,8 +102,7 @@ void FieldLine::AddPoints(ID2D1GeometrySink* sink, const CRect& irect, D2D1_POIN
 			break;
 		}
 
-		pt3.x = static_cast<float>(theApp.options.distanceUnitLength * it->X);
-		pt3.y = static_cast<float>(theApp.options.distanceUnitLength * it->Y);
+		D2D1_POINT_2F pt3{ static_cast<float>(theApp.options.distanceUnitLength * it->X), static_cast<float>(theApp.options.distanceUnitLength * it->Y) };
 
 		sink->AddBezier(D2D1::BezierSegment(pt1, pt2, pt3));
 	}
