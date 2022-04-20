@@ -71,7 +71,7 @@ END_MESSAGE_MAP()
 void ComputationPropertyPage::ApplyValues()
 {
 	theApp.options.calculationMethod = (Options::CalculationMethod)m_Method;
-	theApp.options.calculateEquipotentials = (m_CalculateEquipotentials == BST_CHECKED ? true : false);
+	theApp.options.calculateEquipotentials = m_CalculateEquipotentials == BST_CHECKED;
 	theApp.options.numLinesOnUnitCharge = m_nrLines;
 	theApp.options.numThreads = m_nrThreads;
 
