@@ -50,8 +50,8 @@ void FieldLinesCalculator::StartCalculating(const TheElectricField *theField)
 		for (double angle = angle_start; angle < 2.*M_PI + angle_start - angle_step / 4.; angle += angle_step) {
 			if ((angle != angle_start || !theApp.options.calculateEquipotentials) && sign(total_charge) != sign(charge.charge)) break;
 
-			point.X = charge.position.X + r*cos(angle);
-			point.Y = charge.position.Y + r*sin(angle);
+			point.X = charge.position.X + r * cos(angle);
+			point.Y = charge.position.Y + r * sin(angle);
 
 			CalcJob job{{ charge, total_charge, has_different_signs, angle, angle_start, point, false, 0 }};
 			

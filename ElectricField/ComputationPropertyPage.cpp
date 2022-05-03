@@ -37,7 +37,7 @@ void ComputationPropertyPage::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_EDIT1, m_Edit1);
 	DDX_Control(pDX, IDC_EDIT2, m_Edit2);
 
-	DDV_MinMaxUInt(pDX, m_nrLines, 4, 128);
+	DDV_MinMaxUInt(pDX, m_nrLines, 4, 180);
 	DDV_MinMaxUInt(pDX, m_nrThreads, 1, 128);
 	DDX_Control(pDX, IDC_SLIDER1, m_Slider);
 	DDX_Control(pDX, IDC_STATIC1, m_Static);

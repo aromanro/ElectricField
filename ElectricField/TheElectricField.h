@@ -21,7 +21,7 @@ public:
 	
 	inline bool HitCharge(const Vector2D<double>& pos) const
 	{
-		for (const auto &charge : charges)
+		for (const auto& charge : charges)
 			if (charge.HitCharge(pos))	return true;
 
 		return false;
