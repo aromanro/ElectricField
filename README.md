@@ -1,6 +1,7 @@
 # ElectricField
 Electric field lines and equipotentials using Runge-Kutta methods, including adaptive ones
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/beb9055d3e134d56951bfc3d2422fadb)](https://app.codacy.com/gh/aromanro/ElectricField?utm_source=github.com&utm_medium=referral&utm_content=aromanro/ElectricField&utm_campaign=Badge_Grade_Settings)
 [![CodeFactor](https://www.codefactor.io/repository/github/aromanro/electricfield/badge)](https://www.codefactor.io/repository/github/aromanro/electricfield)
 
 A detailed description of the project is on the computational physics blog: https://compphys.go.ro/electric-field-lines/
