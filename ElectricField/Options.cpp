@@ -34,7 +34,7 @@ void Options::Load()
 {
 	// computing options
 	int res = static_cast<int>(theApp.GetProfileInt(L"options", L"calculateEquipotentials", 1));
-	calculateEquipotentials = (res ? true : false);
+	calculateEquipotentials = res != 0;
 
 	numLinesOnUnitCharge = theApp.GetProfileInt(L"options", L"numLines", 16);
 	numThreads = theApp.GetProfileInt(L"options", L"numThreads", 4);
