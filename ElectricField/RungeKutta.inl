@@ -10,7 +10,7 @@ namespace RungeKutta {
 	template<typename T, unsigned int Stages> RungeKutta<T, Stages>::RungeKutta(const double weights[], const double nodes[], const double *coefficients[])
 		: m_coefficients(Stages - 1)
 	{
-		if (Stages == 0) return;
+		assert(Stages != 0);
 
 		m_weights[0] = weights[0];
 		m_nodes[0] = nodes[0];
