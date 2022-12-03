@@ -143,20 +143,20 @@ namespace RungeKutta {
 		AdaptiveBogackiShampine();
 	};
 
-	template<typename T> class AdaptiveCashKarp : public AdaptiveRungeKutta<T,6,5>
+	template<typename T> class AdaptiveCashKarp : public AdaptiveRungeKutta<T, 6, 5>
 	{
 	public:
 		AdaptiveCashKarp();
 	};
 
-	template<typename T> class AdaptiveFehlberg : public AdaptiveRungeKutta<T,6,5>
+	template<typename T> class AdaptiveFehlberg : public AdaptiveRungeKutta<T, 6, 5>
 	{
 	public:
 		AdaptiveFehlberg();
 	};
 
 	
-	template<typename T> class AdaptiveDormandPrince : public AdaptiveRungeKutta<T,7,5>
+	template<typename T> class AdaptiveDormandPrince : public AdaptiveRungeKutta<T, 7, 5>
 	{
 	public:
 		AdaptiveDormandPrince();
