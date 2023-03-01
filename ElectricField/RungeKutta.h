@@ -48,6 +48,8 @@ namespace RungeKutta {
 	template<typename T, unsigned int Stages, unsigned int Order> class AdaptiveRungeKutta : public RungeKutta<T, Stages> {
 	protected:
 		std::array<double, Stages> m_low_order_weights;
+		static constexpr double invOrder = 1. / Order;
+		static constexpr double invOrder1 = 1. / (Order + 1);
 
 	public:
 		AdaptiveRungeKutta(const double weights[], const double low_order_weights[], const double nodes[], const double *coefficients[]);
@@ -70,13 +72,14 @@ namespace RungeKutta {
 				}
 
 				const double error = abs((thesumHigh - thesumLow) * h);
+				const double toldiverr = tolerance / error;
 
 				if (error <= tolerance || loop > 1000 || abs(h) <= min_step) {
 					T result = curVal + h * thesumHigh;
 					
 					if (error <= DBL_MIN) next_h = h * 2.;
 					else if (error < tolerance)
-						next_h = h * 0.9 * pow(tolerance / error, 1. / (Order+1));
+						next_h = h * 0.9 * pow(toldiverr, invOrder1);
 					else next_h = h;
 
 					if (abs(next_h) < min_step) next_h = min_step*sign(next_h);
@@ -86,7 +89,7 @@ namespace RungeKutta {
 				}
 
 				// decrease the step size
-				h *= 0.9 * pow(tolerance / error, 1. / Order);
+				h *= 0.9 * pow(toldiverr, invOrder);
 			} 
 		}
 
