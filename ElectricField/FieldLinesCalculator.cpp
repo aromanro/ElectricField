@@ -29,6 +29,8 @@ void FieldLinesCalculator::StartCalculating(const TheElectricField *theField)
 
 	if (NULL == theField) return;
 
+	static const double twoM_PI = 2. * M_PI;
+
 	potentialInterval = theApp.options.potentialInterval;
 	calcMethod = theApp.options.calculationMethod;
 
@@ -39,15 +41,16 @@ void FieldLinesCalculator::StartCalculating(const TheElectricField *theField)
 	Vector2D<double> point;
 
 	double angle_start = 0;
-	for (const auto &charge : theField->charges) {
+	for (int i = 0; i < theField->charges.size(); ++i) {
+		const auto& charge = theField->charges[i];
 		if (charge.charge == 0) continue;
 
-		const double angle_step = 2.*M_PI / (fabs(charge.charge)*theApp.options.numLinesOnUnitCharge);
+		const double angle_step = twoM_PI / (fabs(charge.charge)*theApp.options.numLinesOnUnitCharge);
 
-		angle_start = - angle_step / 2. - M_PI;
+		angle_start = - angle_step * 0.5 - M_PI;
 		if (sign(total_charge) != sign(charge.charge))	angle_start += M_PI + angle_step;
 
-		for (double angle = angle_start; angle < 2.*M_PI + angle_start - angle_step / 4.; angle += angle_step) {
+		for (double angle = angle_start; angle < twoM_PI + angle_start - angle_step * 0.25; angle += angle_step) {
 			if ((angle != angle_start || !theApp.options.calculateEquipotentials) && sign(total_charge) != sign(charge.charge)) break;
 
 			point.X = charge.position.X + r * cos(angle);
@@ -64,7 +67,8 @@ int FieldLinesCalculator::GetNumberOfElectricFieldLines(const TheElectricField* 
 {
 	int result = 0;
 
-	for (const auto &charge : field->charges) {
+	for (int i = 0; i < field->charges.size(); ++i) {
+		const auto& charge = field->charges[i];
 		if (charge.charge == 0) continue;
 
 		if (sign(total_charge) == sign(charge.charge))
