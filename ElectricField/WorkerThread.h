@@ -51,7 +51,7 @@ public:
         if (m_Thread.joinable()) m_Thread.join();
     }
 
-protected:
+private:
     inline bool TerminateWait() const
     {
         return m_ThreadsPool->HasWork() || m_Stop;

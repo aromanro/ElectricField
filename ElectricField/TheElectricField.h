@@ -13,11 +13,8 @@ public:
 	std::vector<FieldLine> electricFieldLines;
 	std::vector<PotentialLine> potentialFieldLines;
 
-	TheElectricField();
-	~TheElectricField();
-
-	void Draw(CHwndRenderTarget* renderTarget, CRect& rect);
-	void Draw(CDC* pDC, float zoom);
+	void Draw(CHwndRenderTarget* renderTarget, CRect& rect) const;
+	void Draw(CDC* pDC, float zoom) const;
 	
 	inline bool HitCharge(const Vector2D<double>& pos) const
 	{

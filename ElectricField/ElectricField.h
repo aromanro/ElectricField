@@ -31,9 +31,8 @@ public:
 
 
 // Overrides
-public:
-	virtual BOOL InitInstance();
-	virtual int ExitInstance();
+	BOOL InitInstance() override;
+	int ExitInstance() override;
 
 	void ChangeNumberOfThreads();
 
@@ -50,7 +49,7 @@ public:
 
 	afx_msg void OnAppAbout();
 	DECLARE_MESSAGE_MAP()
-	virtual BOOL OnIdle(LONG lCount);
+	BOOL OnIdle(LONG lCount) override;
 };
 
 

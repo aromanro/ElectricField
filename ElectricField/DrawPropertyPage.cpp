@@ -20,10 +20,6 @@ DrawPropertyPage::DrawPropertyPage()
 	potentialFieldLineThickness = theApp.options.potentialFieldLineThickness;
 }
 
-DrawPropertyPage::~DrawPropertyPage()
-{
-}
-
 void DrawPropertyPage::DoDataExchange(CDataExchange* pDX)
 {
 	CMFCPropertyPage::DoDataExchange(pDX);
@@ -81,7 +77,7 @@ void DrawPropertyPage::ApplyValues()
 		{
 			CDocument* pDoc = pDocTemplate->GetNextDoc(posDoc);
 			
-			if (pDoc) pDoc->UpdateAllViews(NULL);
+			if (pDoc) pDoc->UpdateAllViews(nullptr);
 		}
 	}
 }

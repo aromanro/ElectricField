@@ -7,23 +7,18 @@
 class CChildFrame : public CMDIChildWndEx
 {
 	DECLARE_DYNCREATE(CChildFrame)
-public:
-	CChildFrame();
-
 // Attributes
 // Operations
 // Overrides
-	virtual BOOL PreCreateWindow(CREATESTRUCT& cs);
-
+	
 // Implementation
-public:
-	virtual ~CChildFrame();
+private:
+	BOOL PreCreateWindow(CREATESTRUCT& cs) override;
 #ifdef _DEBUG
-	virtual void AssertValid() const;
-	virtual void Dump(CDumpContext& dc) const;
+	void AssertValid() const override;
+	void Dump(CDumpContext& dc) const override;
 #endif
 
 // Generated message map functions
-protected:
 	DECLARE_MESSAGE_MAP()
 };

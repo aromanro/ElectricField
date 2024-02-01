@@ -27,7 +27,7 @@ void FieldLinesCalculator::StartCalculating(const TheElectricField *theField)
 {
 	Clear();
 
-	if (NULL == theField) return;
+	if (nullptr == theField) return;
 
 	static const double twoM_PI = 2. * M_PI;
 

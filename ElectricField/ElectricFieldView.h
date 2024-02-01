@@ -15,39 +15,36 @@ protected: // create from serialization only
 public:
 	CElectricFieldDoc* GetDocument() const;
 
+private:
 // Operations
 // Overrides
-	virtual void OnDraw(CDC* pDC);  // overridden to draw this view
-	virtual BOOL PreCreateWindow(CREATESTRUCT& cs);
-protected:
-	virtual BOOL OnPreparePrinting(CPrintInfo* pInfo);
-	virtual void OnBeginPrinting(CDC* pDC, CPrintInfo* pInfo);
-	virtual void OnEndPrinting(CDC* pDC, CPrintInfo* pInfo);
+	void OnDraw(CDC* pDC) override;  // overridden to draw this view
+	BOOL PreCreateWindow(CREATESTRUCT& cs) override;
+
+
+	BOOL OnPreparePrinting(CPrintInfo* pInfo) override;
+	void OnBeginPrinting(CDC* pDC, CPrintInfo* pInfo) override;
+	void OnEndPrinting(CDC* pDC, CPrintInfo* pInfo) override;
 
 // Implementation
-public:
-	virtual ~CElectricFieldView();
 #ifdef _DEBUG
-	virtual void AssertValid() const;
-	virtual void Dump(CDumpContext& dc) const;
+	void AssertValid() const override;
+	void Dump(CDumpContext& dc) const override;
 #endif
 
-protected:
 	UINT_PTR timer;
 
 // Generated message map functions
-protected:
 	afx_msg void OnFilePrintPreview();
 
 	DECLARE_MESSAGE_MAP()
 
-public:
 	afx_msg LRESULT OnDrawWithD2D(WPARAM wParam, LPARAM lParam);
 	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
-	virtual void OnPrint(CDC* pDC, CPrintInfo* pInfo);
-	virtual void OnPrepareDC(CDC* pDC, CPrintInfo* pInfo = NULL);
+	void OnPrint(CDC* pDC, CPrintInfo* pInfo) override;
+	void OnPrepareDC(CDC* pDC, CPrintInfo* pInfo = nullptr) override;
 	afx_msg void OnTimer(UINT_PTR nIDEvent);
-	virtual void OnInitialUpdate();
+	void OnInitialUpdate() override;
 	afx_msg void OnDestroy();
 	afx_msg BOOL OnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message);
 };

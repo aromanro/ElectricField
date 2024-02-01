@@ -19,23 +19,26 @@ protected: // create from serialization only
 // Attributes
 public:
 // Operations
+	bool GetData();
+	bool CheckStatus();
+	BOOL OnNewDocument() override;
+
+private:
 // Overrides
-	virtual BOOL OnNewDocument();
-	virtual void Serialize(CArchive& ar);
+	void OnCloseDocument() override;
+	void Serialize(CArchive& ar) override;
 #ifdef SHARED_HANDLERS
-	virtual void InitializeSearchContent();
-	virtual void OnDrawThumbnail(CDC& dc, LPRECT lprcBounds);
+	void InitializeSearchContent() override;
+	void OnDrawThumbnail(CDC& dc, LPRECT lprcBounds) override;
 #endif // SHARED_HANDLERS
 
 // Implementation
-public:
-	virtual ~CElectricFieldDoc();
 #ifdef _DEBUG
-	virtual void AssertValid() const;
-	virtual void Dump(CDumpContext& dc) const;
+	void AssertValid() const override;
+	void Dump(CDumpContext& dc) const override;
 #endif
 
-protected:
+
 // Generated message map functions
 	DECLARE_MESSAGE_MAP()
 
@@ -43,12 +46,7 @@ protected:
 	// Helper function that sets search content for a Search Handler
 	void SetSearchContent(const CString& value);
 #endif // SHARED_HANDLERS
-private:
 	void GetDataFromThreads();
-public:
-	bool GetData();
-	bool CheckStatus();
-	virtual void OnCloseDocument();
 };
 
 

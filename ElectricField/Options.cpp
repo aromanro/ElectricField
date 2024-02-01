@@ -24,12 +24,6 @@ Options::Options()
 {
 }
 
-
-Options::~Options()
-{
-}
-
-
 void Options::Load()
 {
 	// computing options
@@ -49,7 +43,7 @@ void Options::Load()
 	potentialFieldLineThickness = theApp.GetProfileInt(L"options", L"potFieldLineThick", 1);
 
 	UINT sz = 0;
-	LPBYTE buf = NULL;
+	LPBYTE buf = nullptr;
 
 	if (theApp.GetProfileBinary(L"options", L"positiveChargeColor", &buf, &sz))
 	{

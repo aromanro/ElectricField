@@ -36,14 +36,12 @@ END_MESSAGE_MAP()
 // CElectricFieldView construction/destruction
 
 CElectricFieldView::CElectricFieldView()
-	: timer(NULL)
+	: timer(0)
 {	
 	EnableD2DSupport();
 }
 
-CElectricFieldView::~CElectricFieldView()
-{
-}
+
 
 BOOL CElectricFieldView::PreCreateWindow(CREATESTRUCT& cs)
 {
@@ -197,7 +195,7 @@ void CElectricFieldView::OnTimer(UINT_PTR nIDEvent)
 	if (pDoc->GetData())
 	{
 		KillTimer(timer);
-		timer = NULL;
+		timer = 0;
 		
 		EndWaitCursor();
 		Invalidate();
@@ -209,7 +207,7 @@ void CElectricFieldView::OnInitialUpdate()
 {
 	CView::OnInitialUpdate();
 
-	timer = SetTimer(1, 100, NULL);
+	timer = SetTimer(1, 100, nullptr);
 	BeginWaitCursor();
 }
 

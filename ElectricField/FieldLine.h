@@ -14,6 +14,7 @@ public:
 	std::vector<Vector2D<double>> points;
 	
 	FieldLine();
+	virtual ~FieldLine() = default;
 
 	inline void AddPoint(Vector2D<double>& pt)
 	{
@@ -28,6 +29,8 @@ public:
 		}
 	}
 
+	void AdjustForBezier();
+
 	void Draw(CHwndRenderTarget* renderTarget, const CRect& rect, bool isPotential = false) const;
 	void Draw(CDC* pDC, float zoom) const;
 private:
@@ -36,15 +39,11 @@ private:
 	void AddPoints(ID2D1GeometrySink* sink, const CRect& irect, D2D1_POINT_2F& pt1, D2D1_POINT_2F& pt2, bool& opened, bool& broken, bool& morePoints, bool& pt2Valid) const;
 protected:
 	static void AdjustForBezier(const Vector2D<double>& pt0, const Vector2D<double>& pt1, const Vector2D<double>& pt2, const Vector2D<double>& pt3, double& Xo1, double& Yo1, double& Xo2, double& Yo2);
-public:
-	void AdjustForBezier();
 };
 
 
 class PotentialLine : public FieldLine {
 public:
-	double potential;
+	double potential = 0;
 	Vector2D<double> weightCenter;
-
-	PotentialLine() : potential(0), weightCenter(0,0) {}
 };

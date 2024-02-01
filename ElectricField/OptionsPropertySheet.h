@@ -9,16 +9,16 @@ class OptionsPropertySheet : public CMFCPropertySheet
 	DECLARE_DYNAMIC(OptionsPropertySheet)
 
 public:
-	OptionsPropertySheet(UINT nIDCaption, CWnd* pParentWnd = NULL, UINT iSelectPage = 0);
-	OptionsPropertySheet(LPCTSTR pszCaption, CWnd* pParentWnd = NULL, UINT iSelectPage = 0);
-	virtual ~OptionsPropertySheet();
+	OptionsPropertySheet(UINT nIDCaption, CWnd* pParentWnd = nullptr, UINT iSelectPage = 0);
+	OptionsPropertySheet(LPCTSTR pszCaption, CWnd* pParentWnd = nullptr, UINT iSelectPage = 0);
+	~OptionsPropertySheet() override;
 
-protected:
+private:
 	HICON hIcon;
 
 	DECLARE_MESSAGE_MAP()
-public:
-	virtual BOOL OnInitDialog();
+
+	BOOL OnInitDialog() override;
 };
 
 

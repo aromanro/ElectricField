@@ -7,8 +7,8 @@ public:
 	T Y;
 
 	Vector2D();
-	Vector2D(const T& v);
-	template<typename O> Vector2D(const Vector2D<O>& other);
+	explicit Vector2D(const T& v);
+	template<typename O> explicit Vector2D(const Vector2D<O>& other);
 	Vector2D(const T& x, const T& y);
 
 	template<typename O> Vector2D& operator=(const Vector2D<O>& other);

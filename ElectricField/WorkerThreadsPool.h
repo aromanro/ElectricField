@@ -8,10 +8,10 @@
 
 template <class Job> class WorkerThreadsPool
 {
-	typedef WorkerThread<WorkerThreadsPool<Job>, Job> JobWorkerThread;
+	using JobWorkerThread = WorkerThread<WorkerThreadsPool<Job>, Job>;
 	friend class JobWorkerThread;
 public:
-	WorkerThreadsPool(int nrThreads = 4)		
+	explicit WorkerThreadsPool(int nrThreads = 4)		
 	{
 		if (nrThreads <= 0) nrThreads = 1;
 
@@ -89,7 +89,7 @@ public:
 		}
 	}
 
-protected:
+private:
 	std::condition_variable m_Condition;
 	std::mutex m_Mutex;
 	std::queue<Job> m_JobsQueue;

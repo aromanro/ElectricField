@@ -43,14 +43,14 @@ protected:
 	public:
 		const TheElectricField* theField;
 
-		FunctorForCalc(const TheElectricField* field = NULL) : theField(field) {}
+		FunctorForCalc(const TheElectricField* field = nullptr) : theField(field) {}
 	};
 
 	class FunctorForE : public FunctorForCalc {
 	public:
 		int charge_sign;
 
-		FunctorForE(const TheElectricField* field = NULL) : FunctorForCalc(field), charge_sign(1) {};
+		FunctorForE(const TheElectricField* field = nullptr) : FunctorForCalc(field), charge_sign(1) {};
 
 		inline Vector2D<double> operator()(double /*t*/, const Vector2D<double>& pos) {
 			const Vector2D<double> v = theField->ENormalized(pos);
@@ -62,7 +62,7 @@ protected:
 
 	class FunctorForV : public FunctorForCalc {
 	public:
-		FunctorForV(const TheElectricField* field = NULL) : FunctorForCalc(field) {};
+		FunctorForV(const TheElectricField* field = nullptr) : FunctorForCalc(field) {};
 
 		// just returns a perpendicular vector on E
 		inline Vector2D<double> operator()(double /*t*/, const Vector2D<double>& pos) {

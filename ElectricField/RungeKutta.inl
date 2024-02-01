@@ -41,7 +41,7 @@ namespace RungeKutta {
 	static const double EulerNodes[] = { 0 };
 
 	template<typename T> Euler<T>::Euler()
-		: RungeKutta<T, 1>(EulerWeights, EulerNodes, NULL)
+		: RungeKutta<T, 1>(EulerWeights, EulerNodes, nullptr)
 	{
 	}
 

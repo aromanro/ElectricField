@@ -12,24 +12,23 @@ class DrawPropertyPage : public CMFCPropertyPage
 
 public:
 	DrawPropertyPage();
-	virtual ~DrawPropertyPage();
 
 // Dialog Data
 #ifdef AFX_DESIGN_TIME
 	enum { IDD = IDD_DRAWPROPERTYPAGE };
 #endif
 
-protected:
+private:
 	unsigned int electricFieldLineThickness;
 	unsigned int potentialFieldLineThickness;
 
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
+	void DoDataExchange(CDataExchange* pDX) override;    // DDX/DDV support
 
 	DECLARE_MESSAGE_MAP()
 
 	void ApplyValues();
-	virtual BOOL OnApply();
-	virtual BOOL OnInitDialog();
+	BOOL OnApply() override;
+	BOOL OnInitDialog() override;
 	afx_msg void OnEnChangeEdit();
 	afx_msg void OnDeltaposSpin(NMHDR *pNMHDR, LRESULT *pResult);
 	afx_msg void OnBnClickedMfccolorbutton();

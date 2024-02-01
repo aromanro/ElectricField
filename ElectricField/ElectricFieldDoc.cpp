@@ -35,9 +35,6 @@ CElectricFieldDoc::CElectricFieldDoc()
 	calculator = new FieldLinesCalculator();
 }
 
-CElectricFieldDoc::~CElectricFieldDoc()
-{
-}
 
 BOOL CElectricFieldDoc::OnNewDocument()
 {
@@ -106,9 +103,9 @@ void CElectricFieldDoc::SetSearchContent(const CString& value)
 	}
 	else
 	{
-		CMFCFilterChunkValueImpl *pChunk = NULL;
+		CMFCFilterChunkValueImpl *pChunk = nullptr;
 		ATLTRY(pChunk = new CMFCFilterChunkValueImpl);
-		if (pChunk != NULL)
+		if (pChunk != nullptr)
 		{
 			pChunk->SetTextValue(PKEY_Search_Contents, value, CHUNK_TEXT);
 			SetChunkValue(pChunk);
@@ -246,7 +243,7 @@ void CElectricFieldDoc::OnCloseDocument()
 		calculator->Terminate = true;
 		theApp.calculators.push_back(calculator);
 	}
-	calculator = NULL;
+	calculator = nullptr;
 
 	CDocument::OnCloseDocument();
 }

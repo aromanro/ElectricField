@@ -2,17 +2,19 @@
 
 class PrecisionTimer
 {
-protected:
+private:
 	struct times {
 		LARGE_INTEGER start;
 		LARGE_INTEGER stop;
-	} times;
+	};
+
+	times times;
 
 	LARGE_INTEGER freq;
 
 	double LargeIntToSeconds(const LARGE_INTEGER & val) const;
 public:
-	PrecisionTimer(bool start = false);
+	explicit PrecisionTimer(bool start = false);
 
 	void Start();
 	void Stop();

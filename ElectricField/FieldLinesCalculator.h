@@ -13,14 +13,9 @@
 
 class FieldLinesCalculator
 {
-protected:
-	Options::CalculationMethod calcMethod;
-
-	double potentialInterval;
 public:
 	std::atomic_uint postedJobs;
 	std::atomic_uint finishedJobs;
-
 
 	TheElectricField field;
 
@@ -36,7 +31,7 @@ public:
 
 	void Clear();
 
-	double getPotentialInterval() { return potentialInterval; }
+	double getPotentialInterval() const { return potentialInterval; }
 	
 	void StartCalculating(const TheElectricField *theField);
 	static int GetNumberOfElectricFieldLines(const TheElectricField* field, int total_charge);
@@ -44,5 +39,10 @@ public:
 	bool CheckStatus();
 
 	void PostJob(const CalcJob& job);
+
+private:
+	Options::CalculationMethod calcMethod;
+
+	double potentialInterval;
 };
 

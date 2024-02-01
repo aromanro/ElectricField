@@ -20,10 +20,6 @@ ComputationPropertyPage::ComputationPropertyPage()
 	m_nrThreads = theApp.options.numThreads;
 }
 
-ComputationPropertyPage::~ComputationPropertyPage()
-{
-}
-
 void ComputationPropertyPage::DoDataExchange(CDataExchange* pDX)
 {
 	CMFCPropertyPage::DoDataExchange(pDX);

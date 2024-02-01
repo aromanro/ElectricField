@@ -6,17 +6,7 @@
 #include "TheElectricField.h"
 
 
-TheElectricField::TheElectricField()
-{
-}
-
-
-TheElectricField::~TheElectricField()
-{
-}
-
-
-void TheElectricField::Draw(CHwndRenderTarget* renderTarget, CRect& rect)
+void TheElectricField::Draw(CHwndRenderTarget* renderTarget, CRect& rect) const
 {	
 	// draw electric field lines
 	for (const auto &line : electricFieldLines)
@@ -31,7 +21,7 @@ void TheElectricField::Draw(CHwndRenderTarget* renderTarget, CRect& rect)
 		charge.Draw(renderTarget, rect);
 }
 
-void TheElectricField::Draw(CDC* pDC, float zoom)
+void TheElectricField::Draw(CDC* pDC, float zoom) const
 {
 	CPen pen;
 	pen.CreatePen(PS_SOLID, static_cast<int>(theApp.options.electricFieldLineThickness), theApp.options.electricFieldLineColor);
