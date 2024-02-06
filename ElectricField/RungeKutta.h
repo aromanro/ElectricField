@@ -32,7 +32,7 @@ namespace RungeKutta {
 					thesum += m_weights[stage] * K[stage];
 				} 
 				
-				return curVal + h * thesum;
+				return T(curVal + h * thesum);
 			}
 
 		template<typename Func> inline T SolveStep(Func& Function, const T& curVal, double t, double& h, double& /*next_h*/, double /*tolerance*/, double /*max_step*/ = DBL_MAX, double /*min_step*/ = DBL_MIN) const {
@@ -58,7 +58,8 @@ namespace RungeKutta {
 			std::array<T, Stages> K;			
 			
 			for (unsigned int loop = 0;; ++loop) {
-				T thesumHigh(0), thesumLow(0);  
+				T thesumHigh(0);
+				T thesumLow(0);
 
 				for (unsigned int stage = 0; stage < Stages; ++stage)
 				{                                                
@@ -75,7 +76,7 @@ namespace RungeKutta {
 				const double toldiverr = tolerance / error;
 
 				if (error <= tolerance || loop > 1000 || abs(h) <= min_step) {
-					T result = curVal + h * thesumHigh;
+					T result(curVal + h * thesumHigh);
 					
 					if (error <= DBL_MIN) next_h = h * 2.;
 					else if (error < tolerance)
