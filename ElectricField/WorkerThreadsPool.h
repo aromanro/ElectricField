@@ -8,8 +8,8 @@
 
 template <class Job> class WorkerThreadsPool
 {
-	using JobWorkerThread = typename WorkerThread<WorkerThreadsPool<Job>, Job>;
-	friend class JobWorkerThread;
+	using JobWorkerThread = WorkerThread<WorkerThreadsPool<Job>, Job>;
+	friend class WorkerThread<WorkerThreadsPool<Job>, Job>;
 public:
 	explicit WorkerThreadsPool(int nrThreads = 4)		
 	{
