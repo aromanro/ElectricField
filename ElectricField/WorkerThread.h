@@ -62,7 +62,9 @@ private:
         do
         {
             std::unique_lock<std::mutex> lock(m_ThreadsPool->m_Mutex);
-            m_ThreadsPool->m_Condition.wait(lock, [this] { return TerminateWait(); });
+
+            if (!TerminateWait())
+                m_ThreadsPool->m_Condition.wait(lock, [this] { return TerminateWait(); });
 
             while (!m_ThreadsPool->m_JobsQueue.empty() && !m_Stop)
             {
