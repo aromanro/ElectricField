@@ -7,6 +7,12 @@
 // some info needed for a field line job
 struct FieldLineJob 
 {
+	FieldLineJob(const Charge& charge, int total_charge, bool has_different_signs, double angle_start, double angle, const Vector2D<double>& point, bool isEquipotential, double old_potential = 0)
+		: charge(charge), total_charge(total_charge), has_different_signs(has_different_signs), angle_start(angle_start), angle(angle), point(point),
+		isEquipotential(isEquipotential), old_potential(old_potential)
+	{
+	}
+
 	Charge charge;
 	int total_charge = 0;
 	bool has_different_signs = false;
@@ -22,13 +28,18 @@ struct FieldLineJob
 class CalcJob : public FieldLineJob
 {
 public:
+	CalcJob(const Charge& charge, int total_charge, bool has_different_signs, double angle_start, double angle, const Vector2D<double>& point, bool isEquipotential, double old_potential = 0)
+		: FieldLineJob(charge, total_charge, has_different_signs, angle_start, angle, point, isEquipotential, old_potential)
+	{
+	}
+
 	CalcJob(const FieldLineJob& fieldLineJob)
 		: FieldLineJob(fieldLineJob)
-	{};
+	{}
 
 	virtual ~CalcJob() {}
 
-	virtual void Calculate() {};
+	virtual void Calculate() {}
 };
 
 
