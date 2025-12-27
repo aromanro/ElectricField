@@ -53,7 +53,7 @@ protected:
 		FunctorForE(const TheElectricField* field = nullptr) : FunctorForCalc(field), charge_sign(1) {};
 
 		inline Vector2D<double> operator()(double /*t*/, const Vector2D<double>& pos) {
-			const Vector2D<double> v = theField->ENormalized(pos);
+			const Vector2D<double> v = FunctorForCalc::theField->ENormalized(pos);
 
 			return charge_sign > 0 ? v : -v;
 		};
@@ -66,7 +66,7 @@ protected:
 
 		// just returns a perpendicular vector on E
 		inline Vector2D<double> operator()(double /*t*/, const Vector2D<double>& pos) {
-			Vector2D<double> v = theField->E(pos);
+			Vector2D<double> v = FunctorForCalc::theField->E(pos);
 			double temp = v.X;
 			v.X = -v.Y;
 			v.Y = temp;
